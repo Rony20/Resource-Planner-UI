@@ -1,23 +1,60 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../components/Home.vue";
-
+import Projects from "../components/Projects/projects.vue";
+import Requests from "../components/Requests/requests.vue";
+import Resources from "../components/Resources/resources.vue";
+import Reports from "../components/Reports/reports.vue";
+import Allocations from "../components/Allocations/allocations.vue";
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home
+    component: Projects,
+    meta: {
+      title: "Projects"
+    }
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../components/About.vue")
+    path: "/projects",
+    name: "Projects",
+    component: Projects,
+    meta: {
+      title: "Projects"
+    }
+  },
+  {
+    path: "/requests",
+    name: "Requests",
+    component: Requests,
+    meta: {
+      title: "Requests"
+    }
+  },
+  {
+    path: "/resources",
+    name: "Resources",
+    component: Resources,
+    meta: {
+      title: "Resources"
+    }
+  },
+  {
+    path: "/reports",
+    name: "Reports",
+    component: Reports,
+    meta: {
+      title: "Reports"
+    }
+  },
+  {
+    path: "/allocations",
+    name: "Allocations",
+    component: Allocations,
+    meta: {
+      title: "Allocations"
+    }
   }
 ];
 
