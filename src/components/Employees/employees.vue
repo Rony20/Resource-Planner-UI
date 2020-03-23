@@ -34,7 +34,6 @@ export default {
             "Employees Data Successfully fetched !!!";
           this.$store.state.snackbar.show = true;
         });
-      console.log("hello");
     }
   }
 };
