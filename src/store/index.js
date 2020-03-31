@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     user_role: "PMO",
     employees: [],
+    useWeekends: false,
     snackbar: {
       show: false,
       text: "",
@@ -55,6 +56,53 @@ export default new Vuex.Store({
       "CentrifyOps",
       "Checkpoint AR",
       "Checkpoint Dome9 ServiceNow"
+    ],
+    r_projects: [
+      {
+        project: "Checkpoint Dome9 ServiceNow",
+        employees: [
+          {
+            name: "Mehul Jadav",
+            priority: "Urgent",
+            demandedHours: [8, 8, 8, 8, 8]
+          },
+          {
+            name: "Maulik Kotak",
+            priority: "Medium",
+            demandedHours: [8, 8, 8, 8, 8]
+          }
+        ]
+      },
+      {
+        project: "Resource Planner",
+        employees: [
+          {
+            name: "Mehul Jadav",
+            priority: "Low",
+            demandedHours: [8, 8, 8, 8, 8]
+          },
+          {
+            name: "Sameer Karli",
+            priority: "Medium",
+            demandedHours: [8, 8, 8, 8, 8]
+          }
+        ]
+      },
+      {
+        project: "HRMS",
+        employees: [
+          {
+            name: "Rohan B",
+            priority: "Urgent",
+            demandedHours: [8, 8, 8, 8, 8]
+          },
+          {
+            name: "Dhruvil Megha",
+            priority: "Low",
+            demandedHours: [8, 8, 8, 8, 8]
+          }
+        ]
+      }
     ]
   },
   mutations: {},

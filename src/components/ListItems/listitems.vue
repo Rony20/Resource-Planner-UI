@@ -22,39 +22,45 @@
       :single-expand="singleExpand"
       :items-per-page="10"
       :expanded.sync="expanded"
-      item-key="name"
+      item-key="employee_name"
       show-expand
     >
+      <!-- dialog box -->
       <template v-slot:top>
-        <v-dialog v-model="dialog" max-width="500px">
+        <v-dialog v-model="dialog" max-width="700px">
           <v-card>
             <v-card-title>
               <span class="headline">{{ formTitle }}</span>
             </v-card-title>
 
             <v-card-text>
-              <v-container>
+              <v-form ref="form">
                 <v-row>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      readonly
-                    ></v-text-field>
+                    <v-text-field v-model="editedItem.employee_name" readonly></v-text-field>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col>
                     <v-autocomplete
-                      v-model="editedItem.currentAllocation"
+                      v-model="new_project.project"
                       :items="projects"
                       clearable
                       outlined
+                      auto-select-first
                     ></v-autocomplete>
                   </v-col>
                 </v-row>
-              </v-container>
+                <v-row>
+                  <v-col>
+                    <weekly-Timeline-Component
+                      :hours="new_project.allocation"
+                      @hoursChanged="new_project.allocation = $event"
+                    />
+                  </v-col>
+                </v-row>
+              </v-form>
             </v-card-text>
-
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
@@ -64,26 +70,16 @@
         </v-dialog>
       </template>
       <template v-slot:item.actions="{ item }">
-        <v-icon small class="mr-2" @click.stop="editItem(item)"
-          >assignment</v-icon
-        >
+        <v-icon small class="mr-2" @click.stop="editItem(item)">assignment</v-icon>
       </template>
-      <v-switch
-        v-model="singleExpand"
-        label="Single expand"
-        class="mt-2"
-      ></v-switch>
+      <template v-slot:item.availability="{ item }">
+        <v-chip small class="mr-2" v-for="(hour, key) in item.availability" :key="key">{{ hour }}</v-chip>
+      </template>
+      <v-switch v-model="singleExpand" label="Single expand" class="mt-2"></v-switch>
 
-      <template v-slot:expanded-item="{ headers, item }">
+      <template v-slot:expanded-item="{ item }">
         <td :colspan="headers.length">
-          <v-card>
-            <v-card-text
-              v-for="(value, key, index) in item"
-              :key="index"
-              class="font-weight-medium subtitle-2 text-capitalize text-left"
-              >{{ key }}: {{ value }}</v-card-text
-            >
-          </v-card>
+          <expand-row-details :empObject="item" />
         </td>
       </template>
     </v-data-table>
@@ -91,8 +87,14 @@
 </template>
 
 <script>
+import expandRowDetails from "../ExpandRowDetails/expandrowdetails.vue";
+import weeklyTimelineComponent from "../WeeklyTimelineComponent/weeklytimelinecomponent";
 export default {
   name: "listitems",
+  components: {
+    expandRowDetails,
+    weeklyTimelineComponent
+  },
   data() {
     return {
       search: "",
@@ -105,37 +107,17 @@ export default {
         {
           text: "Id",
           align: "center",
-          value: "id"
+          value: "employee_id"
         },
         {
           text: "Name",
           align: "center",
-          value: "name"
+          value: "employee_name"
         },
         {
           text: "Designation",
           align: "center",
-          value: "desgn"
-        },
-        {
-          text: "Allocated",
-          align: "center",
-          value: "isAllocated"
-        },
-        {
-          text: "Skills",
-          align: "center",
-          value: "skills"
-        },
-        {
-          text: "Current Allocation",
-          align: "center",
-          value: "currentAllocation"
-        },
-        {
-          text: "Availability",
-          align: "center",
-          value: "availability"
+          value: "designation"
         },
         {
           text: "Actions",
@@ -150,17 +132,13 @@ export default {
         remove: "remove_circle_outline"
       },
       editedIndex: -1,
-      editedItem: {
-        name: "",
-        currentAllocation: ""
-      },
-      defaultItem: {
-        name: "",
-        currentAllocation: ""
+      editedItem: {},
+      new_project: {
+        project: "",
+        allocation: [0, 0, 0, 0, 0]
       }
     };
   },
-  components: {},
   created() {
     this.$getAllEmployeesData()
       .then(response => {
@@ -168,12 +146,13 @@ export default {
         this.$store.state.employees = x["all_employees"];
         this.$store.state.employees.forEach(emp => {
           let empObj = {
-            id: emp["employee_id"],
-            name: emp["employee_name"],
-            desgn: emp["designation"],
-            isAllocated: emp["is_allocated"] ? "Yes" : "No",
+            employee_id: emp["employee_id"],
+            employee_name: emp["employee_name"],
+            designation: emp["designation"],
+            is_allocated: emp["is_allocated"] ? "Yes" : "No",
             skills: emp["skills"],
-            currentAllocation: emp["current_projects"][0]["project"],
+            current_projects: emp["current_projects"],
+            past_projects: emp["past_projects"],
             availability: emp["availability"]
           };
           this.employees.push(empObj);
@@ -182,6 +161,11 @@ export default {
       .then(() => {
         this.color = "green";
         this.message = "Employees Data Successfully fetched !!!";
+        this.snackbar = true;
+      })
+      .catch(err => {
+        this.color = "red";
+        this.message = err;
         this.snackbar = true;
       });
   },
@@ -210,26 +194,28 @@ export default {
     },
     async save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.employees[this.editedIndex], this.editedItem);
-
-        var respObj = await this.$updateEmployee(this.editedItem.id, {
-          current_projects: [
-            {
-              project: this.editedItem.currentAllocation,
-              allocation: [8, 8, 8, 8, 8]
+        await this.$updateEmployee(this.editedItem.employee_id, {
+          current_projects: this.new_project
+        })
+          .then(respObj => {
+            if (respObj.data["modified_documents"]) {
+              let updatedEmp = respObj.data["modified_documents"];
+              console.log(updatedEmp)
+              Object.assign(this.employees[this.editedIndex], updatedEmp);
+              this.$store.state.snackbar.text = "updation successful !!!";
+              this.$store.state.snackbar.color = "green";
+            } else {
+              this.$store.state.snackbar.text = "updation failed !!!";
+              this.$store.state.snackbar.color = "red";
             }
-          ]
-        });
-
-        if (respObj.data["modified_documents"] > 0) {
-          this.$store.state.snackbar.text = "updation successful !!!";
-          this.$store.state.snackbar.color = "green";
-        } else {
-          this.$store.state.snackbar.text = "updation failed !!!";
-          this.$store.state.snackbar.color = "red";
-        }
-
-        this.$store.state.snackbar.show = true;
+          })
+          .catch(err => {
+            this.$store.state.snackbar.text = err;
+            this.$store.state.snackbar.color = "red";
+          })
+          .finally(() => {
+            this.$store.state.snackbar.show = true;
+          });
       }
 
       this.close();

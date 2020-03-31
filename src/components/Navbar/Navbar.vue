@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app dense dark id="navigationbar">
-      <v-icon>calendar_today</v-icon>
+      <v-icon @click="refresh()">calendar_today</v-icon>
       <v-toolbar-title>Resource Planner</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn
@@ -64,7 +64,11 @@ export default {
     }
   },
 
-  methods: {}
+  methods: {
+    refresh() {
+      this.$router.replace("/");
+    }
+  }
 };
 </script>
 
