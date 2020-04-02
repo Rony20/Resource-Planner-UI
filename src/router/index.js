@@ -2,18 +2,19 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Projects from "../components/Projects/projects.vue";
 import Requests from "../components/Requests/requests.vue";
-import Resources from "../components/Resources/resources.vue";
+import Employees from "../components/Employees/employees.vue";
 import Reports from "../components/Reports/reports.vue";
 import Allocations from "../components/Allocations/allocations.vue";
+import Home from "../components/Home/home.vue";
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
     name: "Home",
-    component: Projects,
+    component: Home,
     meta: {
-      title: "Projects"
+      title: "Home"
     }
   },
   {
@@ -33,11 +34,11 @@ const routes = [
     }
   },
   {
-    path: "/resources",
-    name: "Resources",
-    component: Resources,
+    path: "/employees",
+    name: "Employees",
+    component: Employees,
     meta: {
-      title: "Resources"
+      title: "Employees"
     }
   },
   {

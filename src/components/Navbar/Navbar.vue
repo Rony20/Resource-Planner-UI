@@ -1,11 +1,10 @@
 <template>
   <v-app>
-    <v-app-bar app dense dark class="navbar">
-      <v-icon>note</v-icon>
+    <v-app-bar app dense dark id="navigationbar">
+      <v-icon @click="refresh()">calendar_today</v-icon>
       <v-toolbar-title>Resource Planner</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn
-        class="a"
         v-for="link in links"
         :key="link.text"
         depressed
@@ -17,7 +16,7 @@
       <v-menu bottom left>
         <template v-slot:activator="{ on }">
           <v-btn dark icon v-on="on">
-            <v-icon>mdi-dots-vertical</v-icon>
+            <v-icon dark="">mdi-dots-vertical</v-icon>
           </v-btn>
         </template>
 
@@ -28,7 +27,6 @@
         </v-list>
       </v-menu>
     </v-app-bar>
-    <router-view></router-view>
   </v-app>
 </template>
 
@@ -46,17 +44,17 @@ export default {
         case "PM":
           return [
             { text: "Projects", route: "/projects" },
+            { text: "Employees", route: "/employees" },
             { text: "Requests", route: "/requests" },
-            { text: "Allocations", route: "/allocations" },
-            { text: "Resources", route: "/resources" }
+            { text: "Allocations", route: "/allocations" }
           ];
 
         case "PMO":
           return [
             { text: "Projects", route: "/projects" },
+            { text: "Employees", route: "/employees" },
             { text: "Requests", route: "/requests" },
-            { text: "Reports", route: "/reports" },
-            { text: "Resources", route: "/resources" }
+            { text: "Reports", route: "/reports" }
           ];
 
         // For any other role
@@ -66,8 +64,16 @@ export default {
     }
   },
 
-  methods: {}
+  methods: {
+    refresh() {
+      this.$router.replace("/");
+    }
+  }
 };
 </script>
 
-<style></style>
+<style>
+#navigationbar {
+  max-height: 50px;
+}
+</style>

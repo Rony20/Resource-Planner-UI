@@ -1,12 +1,16 @@
 <template>
-  <v-app>
-    <v-content>This is Requests Page</v-content>
-  </v-app>
+  <v-container fluid>
+    <requestslist></requestslist>
+  </v-container>
 </template>
 
 <script>
+import requestslist from "../RequestsList/requestslist.vue";
 export default {
-  name: "Requests"
+  name: "Requests",
+  components: {
+    requestslist: requestslist
+  }
 };
 </script>
 
