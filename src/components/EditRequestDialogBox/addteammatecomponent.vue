@@ -115,20 +115,7 @@ export default {
     }
   },
   methods: {
-    save() {
-      // this.requestObj.employees.push(teamMember)
-      // this.$emit("empAdded", this.requestObj)\
-      // console.log(teamMember.employee_name);
-      // let addObj = {
-      //   employee_name: this.newEmployee["employee_name"],
-      //   priority: this.newEmployee["priority"],
-      //   demandedHours: this.newEmployee["demandedHours"]
-      // };
-      // this.requestObj.employees.push(addObj);
-    },
-    addToTeam() {
-      // console.log(teamMember.employee_name)
-    },
+    save() {},
     remove(item) {
       const index = this.friends.indexOf(item.name);
       if (index >= 0) this.friends.splice(index, 1);
