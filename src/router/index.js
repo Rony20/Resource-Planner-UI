@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Projects from "../components/Projects/projects.vue";
+import Projects from "../views/Projects.vue";
 import Requests from "../components/Requests/requests.vue";
 import Employees from "../components/Employees/employees.vue";
 import Reports from "../components/Reports/reports.vue";

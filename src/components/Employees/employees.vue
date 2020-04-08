@@ -1,13 +1,25 @@
 <template>
-  <v-container id="employeepage">
-    <v-btn absolute id="syncbtn" @click="fetch_employee_data()">
-      <v-icon>sync</v-icon>Sync with HRMS
-    </v-btn>
-    <br />
-    <br />
-    <listitems></listitems>
-    <br />
-  </v-container>
+  <div id="app">
+    <v-app id="inspire">
+      <v-card color="grey lighten-4" flat height="50px" tile>
+        <v-toolbar dense>
+          <v-toolbar-title>
+            <v-icon color="black" left>people_alt</v-icon>Employees
+          </v-toolbar-title>
+
+          <v-spacer></v-spacer>
+
+          <v-card-actions>
+            <v-btn depressed class="ma-2" color="info" @click="fetch_employee_data">
+              <v-icon left>autorenew</v-icon>Sync HRMS
+            </v-btn>
+          </v-card-actions>
+        </v-toolbar>
+      </v-card>
+
+      <listitems></listitems>
+    </v-app>
+  </div>
 </template>
 
 <script>

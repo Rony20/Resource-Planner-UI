@@ -1,5 +1,5 @@
 <template>
-  <v-card id="tablecard">
+  <v-card id="employee-card">
     <v-card-title>
       <v-row>
         <v-col cols="12" sm="8"></v-col>
@@ -45,6 +45,8 @@
                     <v-autocomplete
                       v-model="new_project.project"
                       :items="projects"
+                      item-text="name"
+                      item-value="key"
                       clearable
                       outlined
                       auto-select-first
@@ -102,7 +104,6 @@ export default {
       dialog: false,
       expanded: [],
       model: "",
-      projects: this.$store.state.projects,
       headers: [
         {
           text: "Id",
@@ -168,12 +169,18 @@ export default {
         this.message = err;
         this.snackbar = true;
       });
+      console.log(this.projects)
   },
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Assign to Project Team";
+    },
+
+    projects(){
+      return this.$store.getters.getProjectKeyList
     }
   },
+
   watch: {
     dialog(val) {
       val || this.close();
@@ -225,7 +232,7 @@ export default {
 </script>
 
 <style scoped>
-#tablecard {
-  margin: 10px;
+#employee-card {
+  margin: 30px 100px;
 }
 </style>

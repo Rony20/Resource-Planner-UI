@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-app-bar app dense dark id="navigationbar">
-      <v-icon @click="refresh()">calendar_today</v-icon>
+    <v-app-bar app dense id="navigationbar">
+      <v-icon left @click="refresh()">calendar_today</v-icon>
       <v-toolbar-title>Resource Planner</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn
@@ -10,13 +10,12 @@
         depressed
         router
         :to="link.route"
-        >{{ link.text }}</v-btn
-      >
+      >{{ link.text }}</v-btn>
       <v-icon>notifications</v-icon>
       <v-menu bottom left>
         <template v-slot:activator="{ on }">
-          <v-btn dark icon v-on="on">
-            <v-icon dark="">mdi-dots-vertical</v-icon>
+          <v-btn icon v-on="on">
+            <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </template>
 
@@ -67,7 +66,21 @@ export default {
   methods: {
     refresh() {
       this.$router.replace("/");
+    },
+
+    loadDropdowns() {
+      this.$getAllDropdowns()
+        .then(response => {
+          let data = response.data;
+          this.$store.dispatch("GENERATE_SKILL_LIST", data["Skills"]);
+          this.$store.dispatch("GENERATE_PM_LIST", data["PM"]);
+        })
+        .catch(error => console.log(error));
     }
+  },
+
+  created() {
+    this.loadDropdowns();
   }
 };
 </script>

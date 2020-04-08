@@ -1,6 +1,10 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
+import ProjectsData from "./module/projects.js"
+import EmployeesData from "./module/employees.js"
+import DropdownsData from "./module/dropdowns.js"
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -14,7 +18,7 @@ export default new Vuex.Store({
       color: "",
       timeout: 3000
     },
-    projects: [
+    my_projects: [
       "AWS Guard Duty",
       "AWS Usage Splunk App for Interns",
       "AWS instance management of Illumio",
@@ -107,5 +111,9 @@ export default new Vuex.Store({
   },
   mutations: {},
   actions: {},
-  modules: {}
+  modules: {
+    ProjectsData,
+    EmployeesData,
+    DropdownsData
+  }
 });
