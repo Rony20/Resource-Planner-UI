@@ -26,13 +26,10 @@
             <v-col cols="12" sm="12">
               <component
                 :is="current_component"
-                v-bind="current_properties"
+                :projectKey="appProject.key"
+                @close="dialog = $event"
+                @refresh="$emit('refresh')"
               ></component>
-            </v-col>
-            <v-col cols="12" sm="12" v-if="false">
-              <project-allocation-table
-                :team="project.team"
-              ></project-allocation-table>
             </v-col>
           </v-row>
         </v-container>
@@ -42,9 +39,6 @@
         <v-spacer></v-spacer>
         <v-btn color="error" class="ma-2" raised @click="dialog = false">
           <v-icon left>cancel</v-icon>Cancel
-        </v-btn>
-        <v-btn color="primary" class="ma-2" raised @click="dialog = false">
-          <v-icon left>save</v-icon>Save
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -56,7 +50,7 @@ import ProjectAllocationTable from "../ProjectAllocationTable";
 import SerachEmployee from "../SearchEmployee";
 
 export default {
-  props: ["project"],
+  props: ["projectKey"],
 
   components: {
     "project-allocation-table": ProjectAllocationTable,
@@ -68,32 +62,23 @@ export default {
       dialog: false,
       team_type: 0,
       current_component: "search-employee",
-      current_properties: {
-        projectDetail: {
-          key: this.project.key,
-          name: this.project.name,
-          team: this.project.team
-        }
-      },
       automatic_hours: true,
       use_weekends: false
     };
+  },
+
+  computed: {
+    appProject() {
+      return this.$store.getters.getProjectByKey(this.projectKey)
+    }
   },
 
   watch: {
     team_type() {
       if (this.team_type === 0) {
         this.current_component = "search-employee";
-        this.current_properties = {
-          projectDetail: {
-            key: this.project.key,
-            name: this.project.name,
-            team: this.project.team
-          }
-        };
       } else if (this.team_type === 1) {
         this.current_component = "project-allocation-table";
-        this.current_properties = { team: this.project.team };
       }
     }
   }

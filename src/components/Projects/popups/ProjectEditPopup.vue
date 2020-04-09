@@ -9,7 +9,13 @@
       <v-card-title>
         <v-icon left>edit</v-icon>Edit Project
         <v-spacer></v-spacer>
-        <v-btn icon @click="dialog = false">
+        <v-btn
+          icon
+          @click="
+            dialog = false;
+            valueAssignment();
+          "
+        >
           <v-icon>close</v-icon>
         </v-btn>
       </v-card-title>
@@ -20,7 +26,6 @@
             label="Project Name"
             prepend-icon="note"
             v-model="project_name"
-            :placeholder="project.name"
           ></v-text-field>
 
           <v-autocomplete
@@ -44,14 +49,16 @@
               >
                 <template v-slot:activator="{ on }">
                   <v-text-field
-                    :placeholder="project.start_date"
                     v-model="start_date"
                     label="Start Date"
                     prepend-icon="event"
                     v-on="on"
                   ></v-text-field>
                 </template>
-                <v-date-picker v-model="start_date" @input="start_date_selector = false"></v-date-picker>
+                <v-date-picker
+                  v-model="start_date"
+                  @input="start_date_selector = false"
+                ></v-date-picker>
               </v-menu>
             </v-col>
             <v-col cols="12" sm="6">
@@ -65,7 +72,6 @@
               >
                 <template v-slot:activator="{ on }">
                   <v-text-field
-                    :placeholder="project.start_date"
                     v-model="end_date"
                     label="End Date"
                     prepend-icon="event"
@@ -73,7 +79,10 @@
                     v-on="on"
                   ></v-text-field>
                 </template>
-                <v-date-picker v-model="end_date" @input="end_date_selector = false"></v-date-picker>
+                <v-date-picker
+                  v-model="end_date"
+                  @input="end_date_selector = false"
+                ></v-date-picker>
               </v-menu>
             </v-col>
             <v-col cols="12" sm="12">
@@ -105,7 +114,15 @@
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="error" class="ma-2" raised @click="dialog = false">
+        <v-btn
+          color="error"
+          class="ma-2"
+          raised
+          @click="
+            dialog = false;
+            valueAssignment();
+          "
+        >
           <v-icon left>cancel</v-icon>Cancel
         </v-btn>
         <v-btn
@@ -113,7 +130,11 @@
           class="ma-2"
           raised
           :disabled="!isValidate"
-          @click="dialog = false; saveProjectDetails()"
+          @click="
+            dialog = false;
+            saveProjectDetails();
+            $emit('refresh')
+          "
         >
           <v-icon left>save</v-icon>Save
         </v-btn>
@@ -124,7 +145,7 @@
 
 <script>
 export default {
-  props: ["project"],
+  props: ["projectKey"],
 
   data() {
     return {
@@ -143,41 +164,51 @@ export default {
 
   methods: {
     valueAssignment() {
-      this.project_name = this.project.name;
-      this.project_lead = this.project.lead;
-      this.start_date = this.project.start_date;
-      this.end_date = this.project.end_date;
-      this.skillsets = this.project.skillsets;
+      this.project_name = this.appProject.name;
+      this.project_lead = this.appProject.lead;
+      this.start_date = this.appProject.start_date;
+      this.end_date = this.appProject.end_date;
+      this.skillsets = this.appProject.skillsets;
     },
 
     saveProjectDetails() {
       let edit_object = {
-        project_name: this.project_name ? this.project_name : this.project.name,
-        assigned_pm: this.project_lead ? this.project_lead : this.project.lead,
-        start_date: this.start_date ? this.start_date : this.project.start_date,
-        end_date: this.end_date ? this.end_date : this.project.end_date,
+        project_name: this.project_name
+          ? this.project_name
+          : this.appProject.name,
+        assigned_pm: this.project_lead
+          ? this.project_lead
+          : this.appProject.lead,
+        start_date: this.start_date
+          ? this.start_date
+          : this.appProject.start_date,
+        end_date: this.end_date ? this.end_date : this.appProject.end_date,
         skillset: this.skillsets
       };
-      this.$editProjectDetailsPmo(this.project.key, edit_object)
+      this.$editProjectDetailsPmo(this.appProject.key, edit_object)
         .then(response => {
           this.$store.dispatch("UPDATE_PROJECT_PMO", response.data)
+          this.valueAssignment();
         })
         .catch(error => console.log(error));
       console.log(edit_object);
-      this.valueAssignment();
     }
   },
 
   computed: {
     isValidate() {
       return (
-        this.project.name !== this.project_name ||
-        this.project.lead !== this.project_lead ||
-        this.project.start_date !== this.start_date ||
-        this.project.end_date !== this.end_date ||
-        JSON.stringify([...this.project.skillsets].sort()) !==
+        this.appProject.name !== this.project_name ||
+        this.appProject.lead !== this.project_lead ||
+        this.appProject.start_date !== this.start_date ||
+        this.appProject.end_date !== this.end_date ||
+        JSON.stringify([...this.appProject.skillsets].sort()) !==
           JSON.stringify([...this.skillsets].sort())
       );
+    },
+
+    appProject() {
+      return this.$store.getters.getProjectByKey(this.projectKey)
     },
 
     appLeads() {
@@ -189,19 +220,10 @@ export default {
     }
   },
 
-  created() {
-    this.skills = ["Vue.js", "Python", "Docker", "Splunk", "Angular", "React"];
-    this.leads = [
-      "Jignesh Patel",
-      "Mehul Jadav",
-      "Maulik Kotak",
-      "Aslam Shaikh"
-    ];
-  },
-
   mounted() {
     this.valueAssignment();
-  }
+  },
+
 };
 </script>
 

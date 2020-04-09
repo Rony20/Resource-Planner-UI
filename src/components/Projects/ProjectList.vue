@@ -45,12 +45,14 @@
         <v-row justify="space-around">
           <v-col>
             <project-edit-popup
-              :project="Object.assign({}, item)"
+              :projectKey="item.key"
+              @refresh="loadProjects"
             ></project-edit-popup>
           </v-col>
           <v-col>
             <project-team-popup
-              :project="Object.assign({}, item)"
+              :projectKey="item.key"
+              @refresh="loadProjects"
             ></project-team-popup>
           </v-col>
         </v-row>
@@ -58,7 +60,7 @@
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">
           <project-dropdown-detail
-            :project="Object.assign({}, item)"
+            :projectKey="item.key"
           ></project-dropdown-detail>
         </td>
       </template>

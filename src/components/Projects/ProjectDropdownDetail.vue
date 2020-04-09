@@ -3,22 +3,22 @@
     <v-row>
       <v-col cols="12" sm="12" md="6">
         <div class="d-flex caption grey--text">Project Name</div>
-        <div class="subtitle-1">{{ project.name }}</div>
+        <div class="subtitle-1">{{ appProject.name }}</div>
       </v-col>
       <v-col cols="12" sm="12" md="6">
         <div class="d-flex caption grey--text">Project Lead</div>
-        <div class="subtitle-1">{{ project.lead | mapLeads(appLeads) }}</div>
+        <div class="subtitle-1">{{ appProject.lead | mapLeads(appLeads) }}</div>
       </v-col>
     </v-row>
     <v-divider></v-divider>
     <v-row>
       <v-col cols="12" sm="12" md="6">
         <div class="d-flex caption grey--text">Start Date (YYYY/MM/DD)</div>
-        <div class="subtitle-1">{{ project.start_date }}</div>
+        <div class="subtitle-1">{{ appProject.start_date }}</div>
       </v-col>
       <v-col cols="12" sm="12" md="6">
         <div class="d-flex caption grey--text">End Date (YYYY/MM/DD)</div>
-        <div class="subtitle-1">{{ project.end_date }}</div>
+        <div class="subtitle-1">{{ appProject.end_date }}</div>
       </v-col>
     </v-row>
     <v-divider></v-divider>
@@ -30,7 +30,7 @@
             small
             dark
             class="mr-2 mt-2"
-            v-for="code in project.skillsets"
+            v-for="code in appProject.skillsets"
             :key="code"
             >{{ code | mapSkills(appSkills) }}</v-chip
           >
@@ -39,12 +39,12 @@
       <v-col cols="12" sm="6" md="6">
         <div class="d-flex caption grey--text">Status</div>
         <div class="my-2">
-          <v-chip dark label small class="mt-2">{{ project.status }}</v-chip>
+          <v-chip dark label small class="mt-2">{{ appProject.status }}</v-chip>
         </div>
       </v-col>
     </v-row>
     <v-divider></v-divider>
-    <project-allocation-table :team="project.team"></project-allocation-table>
+    <project-allocation-table :projectKey="this.projectKey"></project-allocation-table>
   </v-container>
 </template>
 
@@ -52,7 +52,7 @@
 import ProjectAllocationTable from "./ProjectAllocationTable";
 
 export default {
-  props: ["project"],
+  props: ["projectKey"],
 
   components: {
     "project-allocation-table": ProjectAllocationTable
@@ -64,6 +64,10 @@ export default {
 
   computed: {
     // eslint-disable-next-line vue/return-in-computed-property
+    appProject() {
+      return this.$store.getters.getProjectByKey(this.projectKey)
+    },
+
     appSkills() {
       return this.$store.getters.getAllSkills;
     },

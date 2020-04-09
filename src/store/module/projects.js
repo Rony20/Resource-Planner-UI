@@ -3,22 +3,26 @@ const state = {
 };
 
 const getters = {
-  getAllProjects: (state) => {
+  getAllProjects: state => {
     return state.projects;
   },
 
-  getArchivedProjects: (state) => {
-    return state.projects.filter((project) => project.status === "Archived");
+  getArchivedProjects: state => {
+    return state.projects.filter(project => project.status === "Archived");
   },
 
-  getActiveProjects: (state) => {
-    return state.projects.filter((project) => project.status === "Active");
+  getActiveProjects: state => {
+    return state.projects.filter(project => project.status === "Active");
   },
 
-  getProjectKeyList: (state) => {
+  getProjectKeyList: state => {
     return state.projects.map(project => {
-      return {key: project.key, name: project.name}
+      return { key: project.key, name: project.name };
     })
+  },
+
+  getProjectByKey: state => key => {
+    return state.projects.find(project => project.key === key)
   }
 };
 

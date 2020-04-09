@@ -3,10 +3,7 @@
     <v-col cols="12" sm="12" md="12">
       <div class="d-flex caption grey--text">Allocations</div>
       <div class="mt-2">
-        <v-alert v-if="typeof team === 'string'" dense type="warning">{{
-          team
-        }}</v-alert>
-        <v-simple-table v-else fixed-header>
+        <v-simple-table fixed-header>
           <template v-slot:default>
             <thead>
               <tr>
@@ -16,7 +13,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="employee in team" :key="employee.id">
+              <tr v-for="employee in appProject.team" :key="employee.id">
                 <td>{{ employee.id | mapEmployees(appEmployees) }}</td>
                 <td class="text-center">
                   {{ getCurrentAllocation(employee.allocations) }}
@@ -35,7 +32,7 @@
 
 <script>
 export default {
-  props: ["team"],
+  props: ["projectKey"],
 
   methods: {
     getCurrentAllocation(allocation) {
@@ -56,6 +53,10 @@ export default {
   },
 
   computed:{
+    appProject() {
+      return this.$store.getters.getProjectByKey(this.projectKey)
+    },
+
     appEmployees(){
       return this.$store.getters.getEmployees;
     }

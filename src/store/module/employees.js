@@ -1,5 +1,5 @@
 const state = {
-  my_employees: [
+  employees: [
     {
       id: 1,
       name: "Mehul Jadav",
@@ -35,13 +35,41 @@ const state = {
 
 const getters = {
   getEmployees: state => {
-    return state.my_employees;
+    return state.employees;
   }
 };
 
-const mutations = {};
+const mutations = {
+  RESET_EMPLOYEE_LIST: state => {
+    state.employees = [];
+  },
 
-const actions = {};
+  GENERATE_EMPLOYEE_LIST: (state, data) => {
+    data.forEach(element => {
+      let employee_obj = {
+        employee_id: element["employee_id"],
+        employee_name: element["employee_name"],
+        designation: element["designation"],
+        skilss: element["skilss"],
+        past_projects: element["past_projects"],
+        current_projects: element["current_projects"],
+        availability: element["availability"],
+        is_allocated: element["is_available"]
+      };
+      state.employees.push(employee_obj);
+    });
+  }
+};
+
+const actions = {
+  RESET_EMPLOYEE_LIST: ({ commit }) => {
+    commit("RESET_EMPLOYEE_LIST");
+  },
+
+  GENERATE_EMPLOYEE_LIST: ({ commit }, payload) => {
+    commit("GENERATE_EMPLOYEE_LIST", payload);
+  }
+};
 
 export default {
   state,

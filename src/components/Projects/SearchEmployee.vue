@@ -76,7 +76,7 @@
 
     <v-card class="mt-6" v-if="show_card">
       <v-card-title>
-        {{ projectDetail.name }}
+        {{ appProject.name }}
         <v-spacer></v-spacer>
         <v-btn icon @click="clearAddedEmployee">
           <v-icon>clear</v-icon>
@@ -93,7 +93,14 @@
         </v-list-item>
       </v-list>
     </v-card>
-    <v-btn dark class="primary mt-4" v-if="show_card" @click="createTeam"
+    <v-btn
+      dark
+      class="primary mt-4"
+      v-if="show_card"
+      @click="
+        createTeam();
+        $emit('refresh');
+      "
       >Create Team</v-btn
     >
 
@@ -101,10 +108,7 @@
       <v-card-title>Current Team</v-card-title>
       <v-card-text>
         <v-list>
-          <v-list-item
-            v-for="employee in projectDetail.team"
-            :key="employee.id"
-          >
+          <v-list-item v-for="employee in appProject.team" :key="employee.id">
             <v-chip label>
               <v-avatar left>
                 <v-img src="@/assets/avatar.png"></v-img>
@@ -120,7 +124,7 @@
 
 <script>
 export default {
-  props: ["projectDetail"],
+  props: ["projectKey"],
 
   data() {
     return {
@@ -164,13 +168,15 @@ export default {
       console.log(team_list);
       this.added_employee = [];
 
-      this.$createUpdateTeam(this.projectDetail.key, {
+      this.$createUpdateTeam(this.appProject.key, {
         allocated_employees: team_list
       })
         .then(response => {
           this.$store.dispatch("CREATE_UPDATE_TEAM", response.data)
         })
         .catch(error => console.log(error));
+
+        this.$emit("close", false)
     },
 
     clearAddedEmployee() {
@@ -179,6 +185,10 @@ export default {
   },
 
   computed: {
+    appProject() {
+      return this.$store.getters.getProjectByKey(this.projectKey)
+    },
+
     appEmployees() {
       return this.$store.getters.getEmployees;
     },
