@@ -152,14 +152,13 @@ export default {
 
     saveProjectDetails() {
       let edit_object = {
-        project_id: this.project.key,
         project_name: this.project_name ? this.project_name : this.project.name,
         assigned_pm: this.project_lead ? this.project_lead : this.project.lead,
         start_date: this.start_date ? this.start_date : this.project.start_date,
         end_date: this.end_date ? this.end_date : this.project.end_date,
         skillset: this.skillsets
       };
-      this.$editProjectDetailsPmo(this.project_key, edit_object)
+      this.$editProjectDetailsPmo(this.project.key, edit_object)
         .then(response => {
           this.$store.dispatch("UPDATE_PROJECT_PMO", response.data)
         })

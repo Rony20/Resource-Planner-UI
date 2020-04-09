@@ -164,7 +164,9 @@ export default {
       console.log(team_list);
       this.added_employee = [];
 
-      this.$createUpdateTeam()
+      this.$createUpdateTeam(this.projectDetail.key, {
+        allocated_employees: team_list
+      })
         .then(response => {
           this.$store.dispatch("CREATE_UPDATE_TEAM", response.data)
         })

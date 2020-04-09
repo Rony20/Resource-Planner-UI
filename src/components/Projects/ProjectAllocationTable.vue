@@ -39,12 +39,14 @@ export default {
 
   methods: {
     getCurrentAllocation(allocation) {
+      if (allocation.length === 0) return 0;
       let len = allocation.length;
       let hours = allocation[len - 1]["hours"];
       return hours.reduce((total, hour) => total + hour);
     },
 
     getTotalHoursWorked(allocation) {
+      if (allocation.length === 0) return 0;
       var total_hours = 0;
       for (let value of allocation) {
         total_hours += value["hours"].reduce((total, hour) => total + hour);
