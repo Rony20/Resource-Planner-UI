@@ -32,7 +32,7 @@
 
 <script>
 export default {
-  name: "weeklyTimelineComponent",
+  name: "weeklyTimeline",
   props: {},
   data() {
     return {

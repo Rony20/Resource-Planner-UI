@@ -3,13 +3,10 @@
     <v-autocomplete
       v-model="selected_employee"
       :items="filteredEmployee"
-      chips
       label="Select Employee"
-      item-text="name"
-      item-value="id"
+      item-value="employee_id"
       multiple
       hide-selected
-      deletable-chips
       hide-no-data
     >
       <template v-slot:selection="data">
@@ -18,12 +15,12 @@
           :input-value="data.selected"
           close
           @click="data.select"
-          @click:close="remove(data.item.id)"
+          @click:close="remove(data.item.employee_id)"
         >
           <v-avatar left>
             <v-img src="@/assets/avatar.png"></v-img>
           </v-avatar>
-          {{ data.item.name }}
+          {{ data.item.employee_name }}
         </v-chip>
       </template>
       <template v-slot:item="data">
@@ -33,7 +30,7 @@
         <v-list-item-content>
           <v-list-item-title>
             <v-row>
-              <v-col md="4" cols="10">{{ data.item.name }}</v-col>
+              <v-col md="4" cols="10">{{ data.item.employee_name }}</v-col>
               <v-col md="6" cols="10">
                 <v-chip
                   small
@@ -43,7 +40,7 @@
                   class="mx-1"
                   v-for="skill in data.item.skills"
                   :key="skill"
-                  >{{ skill }}</v-chip
+                  >{{ skill | mapSkills(appSkills) }}</v-chip
                 >
               </v-col>
             </v-row>
@@ -83,24 +80,17 @@
         </v-btn>
       </v-card-title>
       <v-list>
-        <v-list-item v-for="emp in added_employee" :key="emp.id">
-          <v-chip label close @click:close="removeFromAddedEmployee(emp.id)">
+        <v-list-item v-for="emp in added_employee" :key="emp.employee_id">
+          <v-chip label close @click:close="removeFromAddedEmployee(emp.employee_id)">
             <v-avatar left>
               <v-img src="@/assets/avatar.png"></v-img>
             </v-avatar>
-            {{ emp.name }}
+            {{ emp.employee_name }}
           </v-chip>
         </v-list-item>
       </v-list>
     </v-card>
-    <v-btn
-      dark
-      class="primary mt-4"
-      v-if="show_card"
-      @click="
-        createTeam();
-        $emit('refresh');
-      "
+    <v-btn dark class="primary mt-4" v-if="show_card" @click="createTeam()"
       >Create Team</v-btn
     >
 
@@ -144,8 +134,7 @@ export default {
     },
 
     removeFromAddedEmployee(id) {
-      console.log(id);
-      const index = this.added_employee.findIndex(emp => emp.id === id);
+      const index = this.added_employee.findIndex(emp => emp.employee_id === id);
       if (index >= 0) {
         this.added_employee.splice(index, 1);
       }
@@ -154,7 +143,7 @@ export default {
     addEmployee() {
       for (let emp_id of this.selected_employee) {
         this.added_employee.push(
-          this.appEmployees.find(emp => emp.id === emp_id)
+          this.appEmployees.find(emp => emp.employee_id === emp_id)
         );
       }
       this.selected_employee = [];
@@ -163,20 +152,21 @@ export default {
     createTeam() {
       let team_list = [];
       this.added_employee.forEach(emp => {
-        team_list.push(emp.id);
+        team_list.push(emp.employee_id);
       });
-      console.log(team_list);
       this.added_employee = [];
 
       this.$createUpdateTeam(this.appProject.key, {
         allocated_employees: team_list
       })
-        .then(response => {
-          this.$store.dispatch("CREATE_UPDATE_TEAM", response.data)
-        })
-        .catch(error => console.log(error));
-
-        this.$emit("close", false)
+        .then()
+        .catch(error => console.log(error))
+        .finally(() => {
+          setTimeout( () => {
+            this.$emit("refresh")
+          }, 500);
+        });
+      this.$emit("close", false);
     },
 
     clearAddedEmployee() {
@@ -191,6 +181,10 @@ export default {
 
     appEmployees() {
       return this.$store.getters.getEmployees;
+    },
+
+    appSkills() {
+      return this.$store.getters.getAllSkills;
     },
 
     filteredEmployee() {

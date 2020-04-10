@@ -133,7 +133,6 @@
           @click="
             dialog = false;
             saveProjectDetails();
-            $emit('refresh')
           "
         >
           <v-icon left>save</v-icon>Save
@@ -186,12 +185,13 @@ export default {
         skillset: this.skillsets
       };
       this.$editProjectDetailsPmo(this.appProject.key, edit_object)
-        .then(response => {
-          this.$store.dispatch("UPDATE_PROJECT_PMO", response.data)
-          this.valueAssignment();
-        })
-        .catch(error => console.log(error));
-      console.log(edit_object);
+        .then(this.valueAssignment())
+        .catch(error => console.log(error))
+        .finally(() => {
+          setTimeout( () => {
+            this.$emit("refresh")
+          }, 500)
+        });
     }
   },
 

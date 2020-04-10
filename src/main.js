@@ -18,7 +18,11 @@ Vue.filter("mapLeads", (value, leads) => {
 })
 
 Vue.filter("mapEmployees", (value, employees) => {
-  return employees.find(emp => emp.id === value).name;
+  return employees.find(emp => emp.employee_id === value).employee_name;
+})
+
+Vue.filter("mapProjects", (value, projects) => {
+  return projects.find(project => project.key === value).name;
 })
 
 new Vue({
