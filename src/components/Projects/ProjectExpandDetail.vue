@@ -44,19 +44,31 @@
       </v-col>
     </v-row>
     <v-divider></v-divider>
-    <project-allocation-table :projectKey="this.projectKey"></project-allocation-table>
+    <v-row>
+      <v-col cols="12" sm="12" md="12">
+        <div class="d-flex caption grey--text">Allocations</div>
+        <project-allocation-table
+          :projectKey="this.projectKey"
+          class="mt-2"
+        ></project-allocation-table>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import ProjectAllocationTable from "./ProjectAllocationTable";
 
+import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js"
+
 export default {
-  props: ["projectKey"],
+  props: { projectKey: String },
 
   components: {
     "project-allocation-table": ProjectAllocationTable
   },
+
+  mixins: [storeDataPropertiesMixin],
 
   data() {
     return {};
@@ -65,16 +77,8 @@ export default {
   computed: {
     // eslint-disable-next-line vue/return-in-computed-property
     appProject() {
-      return this.$store.getters.getProjectByKey(this.projectKey)
+      return this.$store.getters.getProjectByKey(this.projectKey);
     },
-
-    appSkills() {
-      return this.$store.getters.getAllSkills;
-    },
-
-    appLeads() {
-      return this.$store.getters.getAllPms;
-    }
   }
 };
 </script>

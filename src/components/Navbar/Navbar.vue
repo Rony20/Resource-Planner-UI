@@ -10,7 +10,8 @@
         depressed
         router
         :to="link.route"
-      >{{ link.text }}</v-btn>
+        >{{ link.text }}</v-btn
+      >
       <v-icon>notifications</v-icon>
       <v-menu bottom left>
         <template v-slot:activator="{ on }">
@@ -32,11 +33,49 @@
 <script>
 export default {
   name: "Navbar",
+
   data() {
     return {
       pers_actions: ["Profile", "Logout"]
     };
   },
+
+  methods: {
+    refresh() {
+      this.$router.replace("/");
+    },
+
+    loadDropdowns() {
+      this.$getAllDropdowns()
+        .then(response => {
+          let data = response.data;
+          this.$store.dispatch("GENERATE_SKILL_LIST", data["Skills"]);
+          this.$store.dispatch("GENERATE_PM_LIST", data["PM"]);
+        })
+        .catch(error => console.log(error));
+    },
+
+    loadProjects() {
+      this.$store.dispatch("RESET_PROJECT_LIST");
+
+      this.$getAllProjectsData()
+        .then(response => {
+          this.$store.dispatch("GENERATE_PROJECT_LIST", response.data);
+        })
+        .catch(error => console.log(error));
+    },
+
+    loadEmployees() {
+      this.$store.dispatch("RESET_EMPLOYEE_LIST");
+
+      this.$getAllEmployeesData()
+        .then(response => {
+          this.$store.dispatch("GENERATE_EMPLOYEE_LIST", response.data);
+        })
+        .catch(error => console.log(error));
+    }
+  },
+
   computed: {
     links() {
       switch (this.$store.state.user_role) {
@@ -63,23 +102,9 @@ export default {
     }
   },
 
-  methods: {
-    refresh() {
-      this.$router.replace("/");
-    },
-
-    loadDropdowns() {
-      this.$getAllDropdowns()
-        .then(response => {
-          let data = response.data;
-          this.$store.dispatch("GENERATE_SKILL_LIST", data["Skills"]);
-          this.$store.dispatch("GENERATE_PM_LIST", data["PM"]);
-        })
-        .catch(error => console.log(error));
-    }
-  },
-
   created() {
+    this.loadProjects();
+    this.loadEmployees();
     this.loadDropdowns();
   }
 };

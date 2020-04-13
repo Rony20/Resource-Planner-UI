@@ -1,38 +1,41 @@
 <template>
-  <v-row>
-    <v-col cols="12" sm="12" md="12">
-      <div class="d-flex caption grey--text">Allocations</div>
-      <div class="mt-2">
-        <v-simple-table fixed-header>
-          <template v-slot:default>
-            <thead>
-              <tr>
-                <th class="text-left">Name</th>
-                <th class="text-center">Currunt Allocation(Hrs)</th>
-                <th class="text-center">Total Worked(Hrs)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="employee in appProject.team" :key="employee.id">
-                <td>{{ employee.id | mapEmployees(appEmployees) }}</td>
-                <td class="text-center">
-                  {{ getCurrentAllocation(employee.allocations) }}
-                </td>
-                <td class="text-center">
-                  {{ getTotalHoursWorked(employee.allocations) }}
-                </td>
-              </tr>
-            </tbody>
-          </template>
-        </v-simple-table>
-      </div>
-    </v-col>
-  </v-row>
+  <div>
+    <v-simple-table fixed-header class="elevation-3">
+      <template v-slot:default>
+        <thead>
+          <tr>
+            <th class="text-left">Name</th>
+            <th class="text-center">Currunt Allocation(Hrs)</th>
+            <th class="text-center">Total Worked(Hrs)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="employee in appProject.team" :key="employee.id">
+            <td>{{ employee.id | mapEmployees(appEmployees) }}</td>
+            <td class="text-center">
+              <v-chip dark label small class="info">{{
+                getCurrentAllocation(employee.allocations)
+              }}</v-chip>
+            </td>
+            <td class="text-center">
+              <v-chip dark label small class="info">{{
+                getTotalHoursWorked(employee.allocations)
+              }}</v-chip>
+            </td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
+  </div>
 </template>
 
 <script>
+import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js"
+
 export default {
-  props: ["projectKey"],
+  props: { projectKey: String },
+
+  mixins: [storeDataPropertiesMixin],
 
   methods: {
     getCurrentAllocation(allocation) {
@@ -52,14 +55,10 @@ export default {
     }
   },
 
-  computed:{
+  computed: {
     appProject() {
-      return this.$store.getters.getProjectByKey(this.projectKey)
+      return this.$store.getters.getProjectByKey(this.projectKey);
     },
-
-    appEmployees(){
-      return this.$store.getters.getEmployees;
-    }
   }
 };
 </script>

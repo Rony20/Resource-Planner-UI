@@ -21,7 +21,8 @@
             class="mr-2 mt-2"
             v-for="skill in appEmployee.skills"
             :key="skill"
-          >{{ skill | mapSkills(appSkills) }}</v-chip>
+            >{{ skill | mapSkills(appSkills) }}</v-chip
+          >
         </div>
       </v-col>
       <v-col cols="12" sm="6" md="6">
@@ -35,63 +36,71 @@
     </v-row>
     <v-divider></v-divider>
     <v-row>
-      <v-col cols="12" sm="6" md="6">
-        <div class="caption d-flex grey--text">Current Projects</div>
-        <div class="my-2">
-          <div
-            class="subtitle"
-            v-for="project in appEmployee.current_projects"
-            :key="project.project"
-          >
-            <v-btn fab x-small depressed color="primary">{{ project.project }}</v-btn>
-            {{ project.project | mapProjects(appProjects) }}
-          </div>
-        </div>
+      <v-col cols="12" md="6">
+        <div class="caption d-flex grey--text">Current Availibility</div>
+        <app-show-week-hours
+          class="mt-2"
+          :hoursArray="appEmployee.availability['current']"
+        ></app-show-week-hours>
+      </v-col>
+      <v-col cols="12" md="6">
+        <div class="caption d-flex grey--text">Next Week Availibility</div>
+        <app-show-week-hours
+          class="mt-2"
+          :hoursArray="appEmployee.availability['next']"
+        ></app-show-week-hours>
       </v-col>
     </v-row>
     <v-divider></v-divider>
     <v-row>
-      <v-col cols="12" sm="6" md="6">
-        <div class="caption d-flex grey--text">Past Projects</div>
-        <div class="my-2">
-          <div class="subtitle" v-for="project in appEmployee.past_projects" :key="project.project">
-            <v-btn fab x-small depressed dark color="purple">{{ project.project }}</v-btn>
-            {{ project.project | mapProjects(appProjects) }}
-          </div>
-        </div>
+      <v-col cols="12" sm="12" md="12">
+        <div class="caption d-flex grey--text">Current Projects</div>
+        <employee-current-project-table
+          :employeeId="this.employeeId"
+          projectsType="current"
+          class="mt-2"
+        ></employee-current-project-table>
       </v-col>
     </v-row>
+    <v-divider></v-divider>
+    <v-row>
+      <v-col cols="12" sm="12" md="12">
+        <div class="caption d-flex grey--text">Past Projects</div>
+        <employee-current-project-table
+          :employeeId="this.employeeId"
+          projectsType="past"
+          class="mt-2"
+        ></employee-current-project-table>
+      </v-col>
+    </v-row>
+
   </v-container>
 </template>
 
 <script>
-export default {
-  props: ["employeeId"],
-  components: {},
+import EmployeeCurrentProjectTable from "./EmployeeCurrentProjectTable.vue";
+import AppShowWeekHours from "../Common/AppShowWeekHours";
 
-  data() {
-    return {};
+import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js"
+
+export default {
+  props: {
+    employeeId: Number
   },
+
+  components: {
+    "employee-current-project-table": EmployeeCurrentProjectTable,
+    "app-show-week-hours": AppShowWeekHours
+  },
+
+  mixins: [storeDataPropertiesMixin],
 
   computed: {
     appEmployee() {
       return this.$store.getters.getEmployeeById(this.employeeId);
-    },
-
-    appProjects() {
-        return this.$store.getters.getAllProjects;
-    },
-
-    appSkills() {
-      return this.$store.getters.getAllSkills;
-    },
-
-    appLeads() {
-      return this.$store.getters.getAllPms;
     }
   }
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

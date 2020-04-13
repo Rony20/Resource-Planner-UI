@@ -44,6 +44,7 @@
           small
           v-for="project in item.current_projects"
           :key="project.project"
+          class="mr-2"
         >
             {{ project.project }}
         </v-chip>
@@ -51,6 +52,7 @@
       <template v-slot:item.actions="{ item }">
         <employee-assignment-popup
           :employeeId="item.employee_id"
+          @refresh="loadEmployees()"
         ></employee-assignment-popup>
       </template>
       <template v-slot:expanded-item="{ headers, item }">
@@ -79,7 +81,7 @@ export default {
       search: "",
       dialog: false,
       employee_loader: true,
-      singleExpand: false,
+      singleExpand: true,
       refresh: false,
       expanded: [],
       headers: [

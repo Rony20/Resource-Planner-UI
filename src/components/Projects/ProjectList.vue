@@ -59,9 +59,7 @@
       </template>
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">
-          <project-dropdown-detail
-            :projectKey="item.key"
-          ></project-dropdown-detail>
+          <project-expand-detail :projectKey="item.key"></project-expand-detail>
         </td>
       </template>
     </v-data-table>
@@ -71,7 +69,9 @@
 <script>
 import ProjectEditPopup from "./popups/ProjectEditPopup";
 import ProjectTeamPopup from "./popups/ProjectTeamPopup";
-import ProjectDropdownDetail from "./ProjectDropdownDetail";
+import ProjectExpandDetail from "./ProjectExpandDetail";
+
+import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js";
 
 export default {
   name: "Project",
@@ -79,17 +79,19 @@ export default {
   components: {
     "project-edit-popup": ProjectEditPopup,
     "project-team-popup": ProjectTeamPopup,
-    "project-dropdown-detail": ProjectDropdownDetail
+    "project-expand-detail": ProjectExpandDetail
   },
 
   props: ["projectType"],
+
+  mixins: [storeDataPropertiesMixin],
 
   data() {
     return {
       search: "",
       dialog: false,
       project_loader: true,
-      single_expand: false,
+      single_expand: true,
       refresh: false,
       expanded: [],
       headers: [
@@ -138,10 +140,6 @@ export default {
           return this.$store.getters.getArchivedProjects;
       }
     },
-
-    appLeads() {
-      return this.$store.getters.getAllPms;
-    }
   },
 
   created() {

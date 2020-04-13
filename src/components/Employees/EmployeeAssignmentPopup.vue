@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="600px" v-model="dialog" persistent>
+  <v-dialog max-width="500px" v-model="dialog" persistent>
     <template v-slot:activator="{ on }">
       <v-btn icon slot="activator" v-on="on">
         <v-icon>assignment</v-icon>
@@ -22,16 +22,16 @@
       <v-divider></v-divider>
       <v-card-text class="mt-3">
         <v-form class="px-2">
-          <v-text-field
-            label="Employee Name"
-            prepend-icon="person"
-            v-model="employee_name"
-            disabled
-          ></v-text-field>
+          <p class="subtitle-1 font-weight-bold">
+            <v-avatar class="mr-2" size="28" tile left>
+              <v-img src="@/assets/avatar.png"></v-img>
+            </v-avatar>
+            {{ employee_name }}
+          </p>
 
           <v-autocomplete
             v-model="project"
-            :items="projects"
+            :items="projectKeyList"
             item-text="name"
             item-value="key"
             label="Project to be Assigned"
@@ -73,12 +73,15 @@
 // import axios from 'axios'
 
 export default {
-  props: ["employeeId"],
+  props: {
+    employeeId: Number
+  },
+
   data() {
     return {
       dialog: false,
       employee_name: null,
-      project: null,
+      project: null
     };
   },
   methods: {
@@ -88,15 +91,38 @@ export default {
     },
 
     assignEmployeeToProject() {
-      console.log(this.project)
-
       this.$createUpdateTeam(this.project, {
         allocated_employees: [this.employeeId]
       })
-        .then(response => {
-          console.log(response.data)
-        })
+        .then()
         .catch(error => console.log(error));
+
+      this.$updateEmployee(this.employeeId, {
+        current_projects: {
+          project: this.project,
+          allocation: []
+        }
+      })
+        .then(() => {
+          this.$notify({
+            title: "Success",
+            text: `${this.appEmployee["employee_name"]} is assigned in "${this.project}"`,
+            type: "success"
+          });
+        })
+        .catch(error => {
+          this.$notify({
+            title: "Error",
+            text: `Error in assigning ${this.appEmployee["employee_name"]} to "${this.project}"`,
+            type: "error"
+          })
+          console.log(error)
+          })
+        .finally(() => {
+          setTimeout(() => {
+            this.$emit("refresh");
+          }, 500);
+        });
     }
   },
 
@@ -108,7 +134,7 @@ export default {
       return this.$store.getters.getEmployeeById(this.employeeId);
     },
 
-    projects() {
+    projectKeyList() {
       return this.$store.getters.getProjectKeyList;
     }
   },
@@ -117,8 +143,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
-
-
-
+<style scoped></style>

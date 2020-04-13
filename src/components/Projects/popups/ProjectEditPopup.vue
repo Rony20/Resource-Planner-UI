@@ -143,8 +143,12 @@
 </template>
 
 <script>
+import { storeDataPropertiesMixin } from "../../../Mixins/storeDataProperties.js";
+
 export default {
-  props: ["projectKey"],
+  props: { projectKey: String },
+
+  mixins: [storeDataPropertiesMixin],
 
   data() {
     return {
@@ -185,12 +189,26 @@ export default {
         skillset: this.skillsets
       };
       this.$editProjectDetailsPmo(this.appProject.key, edit_object)
-        .then(this.valueAssignment())
-        .catch(error => console.log(error))
+        .then(() => {
+          this.valueAssignment();
+          this.$notify({
+            title: "Success",
+            text: `${this.appProject["name"]} project details are updated succesfully !`,
+            type: "success"
+          });
+        })
+        .catch(error => {
+          console.log(error)
+          this.$notify({
+            title: "Error",
+            text: `Error in updating "${this.appProject["name"]}" details !`,
+            type: "error"
+          })
+          })
         .finally(() => {
-          setTimeout( () => {
-            this.$emit("refresh")
-          }, 500)
+          setTimeout(() => {
+            this.$emit("refresh");
+          }, 500);
         });
     }
   },
@@ -208,22 +226,13 @@ export default {
     },
 
     appProject() {
-      return this.$store.getters.getProjectByKey(this.projectKey)
-    },
-
-    appLeads() {
-      return this.$store.getters.getAllPms;
-    },
-
-    appSkills() {
-      return this.$store.getters.getAllSkills;
+      return this.$store.getters.getProjectByKey(this.projectKey);
     }
   },
 
   mounted() {
     this.valueAssignment();
-  },
-
+  }
 };
 </script>
 

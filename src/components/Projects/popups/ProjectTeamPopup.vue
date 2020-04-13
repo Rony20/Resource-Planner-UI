@@ -7,7 +7,7 @@
     </template>
     <v-card>
       <v-card-title>
-        <v-icon left>people</v-icon>Team
+        <v-icon left>people</v-icon>Team - {{ appProject.name }}
         <v-spacer></v-spacer>
         <v-btn icon @click="dialog = false">
           <v-icon>close</v-icon>
@@ -50,7 +50,7 @@ import ProjectAllocationTable from "../ProjectAllocationTable";
 import SerachEmployee from "../SearchEmployee";
 
 export default {
-  props: ["projectKey"],
+  props: { projectKey: String },
 
   components: {
     "project-allocation-table": ProjectAllocationTable,

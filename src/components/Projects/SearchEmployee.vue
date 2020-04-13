@@ -73,48 +73,70 @@
 
     <v-card class="mt-6" v-if="show_card">
       <v-card-title>
-        {{ appProject.name }}
+        New Team Members
         <v-spacer></v-spacer>
         <v-btn icon @click="clearAddedEmployee">
           <v-icon>clear</v-icon>
         </v-btn>
       </v-card-title>
-      <v-list>
-        <v-list-item v-for="emp in added_employee" :key="emp.employee_id">
-          <v-chip label close @click:close="removeFromAddedEmployee(emp.employee_id)">
-            <v-avatar left>
-              <v-img src="@/assets/avatar.png"></v-img>
-            </v-avatar>
-            {{ emp.employee_name }}
-          </v-chip>
-        </v-list-item>
-      </v-list>
+      <v-card-text>
+        <v-row>
+          <v-col
+            cols="12"
+            sm="4"
+            md="3"
+            v-for="emp in added_employee"
+            :key="emp.employee_id"
+          >
+            <v-chip
+              label
+              close
+              @click:close="removeFromAddedEmployee(emp.employee_id)"
+            >
+              <v-avatar left>
+                <v-img src="@/assets/avatar.png"></v-img>
+              </v-avatar>
+              {{ emp.employee_name }}
+            </v-chip>
+          </v-col>
+        </v-row>
+      </v-card-text>
     </v-card>
     <v-btn dark class="primary mt-4" v-if="show_card" @click="createTeam()"
       >Create Team</v-btn
     >
 
     <v-card class="mt-4">
-      <v-card-title>Current Team</v-card-title>
+      <v-card-title>Current Team Members</v-card-title>
       <v-card-text>
-        <v-list>
-          <v-list-item v-for="employee in appProject.team" :key="employee.id">
+        <v-row>
+          <v-col
+            cols="12"
+            sm="4"
+            md="3"
+            v-for="employee in appProject.team"
+            :key="employee.id"
+          >
             <v-chip label>
               <v-avatar left>
                 <v-img src="@/assets/avatar.png"></v-img>
               </v-avatar>
               {{ employee.id | mapEmployees(appEmployees) }}
             </v-chip>
-          </v-list-item>
-        </v-list>
+          </v-col>
+        </v-row>
       </v-card-text>
     </v-card>
   </div>
 </template>
 
 <script>
+import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js"
+
 export default {
-  props: ["projectKey"],
+  props: { projectKey: String },
+
+  mixins: [storeDataPropertiesMixin],
 
   data() {
     return {
@@ -134,7 +156,9 @@ export default {
     },
 
     removeFromAddedEmployee(id) {
-      const index = this.added_employee.findIndex(emp => emp.employee_id === id);
+      const index = this.added_employee.findIndex(
+        emp => emp.employee_id === id
+      );
       if (index >= 0) {
         this.added_employee.splice(index, 1);
       }
@@ -159,11 +183,24 @@ export default {
       this.$createUpdateTeam(this.appProject.key, {
         allocated_employees: team_list
       })
-        .then()
-        .catch(error => console.log(error))
+        .then(() => {
+          this.$notify({
+            title: "Success",
+            text: `${this.appProject["name"]} team detail is updated !`,
+            type: "success"
+          });
+        })
+        .catch(error => {
+          this.$notify({
+            title: "Error",
+            text: `Error in upadating ${this.appProject["name"]}'s team details !`,
+            type: "error"
+          });
+          console.log(error);
+        })
         .finally(() => {
-          setTimeout( () => {
-            this.$emit("refresh")
+          setTimeout(() => {
+            this.$emit("refresh");
           }, 500);
         });
       this.$emit("close", false);
@@ -176,7 +213,7 @@ export default {
 
   computed: {
     appProject() {
-      return this.$store.getters.getProjectByKey(this.projectKey)
+      return this.$store.getters.getProjectByKey(this.projectKey);
     },
 
     appEmployees() {
@@ -189,7 +226,8 @@ export default {
 
     filteredEmployee() {
       return this.appEmployees.filter(
-        ({ id: id1 }) => !this.added_employee.some(({ id: id2 }) => id2 === id1)
+        ({ employee_id: id1 }) =>
+          !this.added_employee.some(({ employee_id: id2 }) => id2 === id1)
       );
     }
   },

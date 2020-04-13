@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <navbar id="navbar"></navbar>
+    <app-navbar id="navbar"></app-navbar>
     <router-view></router-view>
     <v-snackbar
       right
@@ -16,13 +16,14 @@
 
 <script>
 import Navbar from "../Navbar/Navbar.vue";
+
 export default {
   name: "Home",
   data() {
     return { snackbar: this.$store.state.snackbar };
   },
   components: {
-    navbar: Navbar
+    "app-navbar": Navbar
   },
   watch: {
     $route(to) {

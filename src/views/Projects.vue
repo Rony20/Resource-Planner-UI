@@ -65,9 +65,23 @@ export default {
       this.jira_loader = true;
       this.$syncJira()
         .then(response => {
-          if (response.data === "success") this.$refs.syncload.loadProjects();
+          if (response.data === "success") {
+            this.$notify({
+              title: "Information",
+              text: "Projects are synced with JIRA!",
+              type: "info"
+            });
+            this.$refs.syncload.loadProjects();
+          }
         })
-        .catch(error => console.error(error))
+        .catch(error => {
+          this.$notify({
+            title: "Error",
+            text: "Error in sync with JIRA!",
+            type: "error"
+          });
+          console.error(error);
+        })
         .finally(() => {
           this.jira_loader = false;
         });
