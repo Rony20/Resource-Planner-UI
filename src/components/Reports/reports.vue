@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import weeklyTimelineComponent from "../WeeklyTimelineComponent/weeklytimelinecomponent.vue";
+import weeklyTimelineComponent from "../Common/WeeklytTimeline";
 export default {
   name: "Reports",
   components: {
