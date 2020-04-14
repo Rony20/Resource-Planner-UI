@@ -70,12 +70,14 @@
 </template>
 
 <script>
-// import axios from 'axios'
+import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js";
 
 export default {
   props: {
     employeeId: Number
   },
+
+  mixins: [storeDataPropertiesMixin],
 
   data() {
     return {
@@ -106,18 +108,28 @@ export default {
         .then(() => {
           this.$notify({
             title: "Success",
-            text: `${this.appEmployee["employee_name"]} is assigned in "${this.project}"`,
+            text: `${
+              this.appEmployee["employee_name"]
+            } is assigned in "${this.$options.filters.mapProjects(
+              this.project,
+              this.appProjects
+            )}"`,
             type: "success"
           });
         })
         .catch(error => {
           this.$notify({
             title: "Error",
-            text: `Error in assigning ${this.appEmployee["employee_name"]} to "${this.project}"`,
+            text: `Error in assigning ${
+              this.appEmployee["employee_name"]
+            } to "${this.$options.filters.mapProjects(
+              this.project,
+              this.appProjects
+            )}"`,
             type: "error"
-          })
-          console.log(error)
-          })
+          });
+          console.log(error);
+        })
         .finally(() => {
           setTimeout(() => {
             this.$emit("refresh");

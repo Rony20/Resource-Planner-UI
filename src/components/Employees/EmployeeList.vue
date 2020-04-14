@@ -3,7 +3,7 @@
     <v-card-title>
       <v-row>
         <v-col class="grey--text" cols="12" sm="8">
-          Project Details
+          Employee Details
           <v-btn icon :loading="employee_loader" @click="loadEmployees">
             <v-icon>refresh</v-icon>
             <template v-slot:loader>
