@@ -21,6 +21,8 @@
       </v-card-title>
       <v-divider></v-divider>
       <v-card-text class="mt-3">
+        {{ start_date }} - {{ end_date }}
+        {{ formatedStartDate }} - {{ formatedEndDate }}
         <v-form class="px-2">
           <v-text-field
             label="Project Name"
@@ -49,7 +51,7 @@
               >
                 <template v-slot:activator="{ on }">
                   <v-text-field
-                    v-model="start_date"
+                    :value="formatedStartDate"
                     label="Start Date"
                     prepend-icon="event"
                     v-on="on"
@@ -72,7 +74,7 @@
               >
                 <template v-slot:activator="{ on }">
                   <v-text-field
-                    v-model="end_date"
+                    :value="formatedEndDate"
                     label="End Date"
                     prepend-icon="event"
                     readonly
@@ -169,8 +171,16 @@ export default {
     valueAssignment() {
       this.project_name = this.appProject.name;
       this.project_lead = this.appProject.lead;
-      this.start_date = this.appProject.start_date;
-      this.end_date = this.appProject.end_date;
+      this.start_date = this.appProject.start_date
+        ? this.$moment(this.appProject.start_date, "DD-MM-YYYY").format(
+            "YYYY-MM-DD"
+          )
+        : "";
+      this.end_date = this.appProject.end_date
+        ? this.$moment(this.appProject.end_date, "DD-MM-YYYY").format(
+            "YYYY-MM-DD"
+          )
+        : "";;
       this.skillsets = this.appProject.skillsets;
     },
 
@@ -198,13 +208,13 @@ export default {
           });
         })
         .catch(error => {
-          console.log(error)
+          console.log(error);
           this.$notify({
             title: "Error",
             text: `Error in updating "${this.appProject["name"]}" details !`,
             type: "error"
-          })
-          })
+          });
+        })
         .finally(() => {
           setTimeout(() => {
             this.$emit("refresh");
@@ -218,8 +228,8 @@ export default {
       return (
         this.appProject.name !== this.project_name ||
         this.appProject.lead !== this.project_lead ||
-        this.appProject.start_date !== this.start_date ||
-        this.appProject.end_date !== this.end_date ||
+        this.appProject.start_date !== this.formatedStartDate ||
+        this.appProject.end_date !== this.formatedEndDate ||
         JSON.stringify([...this.appProject.skillsets].sort()) !==
           JSON.stringify([...this.skillsets].sort())
       );
@@ -227,6 +237,14 @@ export default {
 
     appProject() {
       return this.$store.getters.getProjectByKey(this.projectKey);
+    },
+
+    formatedStartDate() {
+      return this.$moment(this.start_date, "YYYY-MM-DD").format("DD-MM-YYYY");
+    },
+
+    formatedEndDate() {
+      return this.$moment(this.end_date, "YYYY-MM-DD").format("DD-MM-YYYY");
     }
   },
 

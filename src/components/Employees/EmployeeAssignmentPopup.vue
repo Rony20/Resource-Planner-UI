@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="500px" v-model="dialog" persistent>
+  <v-dialog max-width="600px" v-model="dialog" persistent>
     <template v-slot:activator="{ on }">
       <v-btn icon slot="activator" v-on="on">
         <v-icon>assignment</v-icon>
@@ -13,7 +13,7 @@
           icon
           @click="
             dialog = false;
-            value_assignement();
+            valueAssignment();
           "
         >
           <v-icon>close</v-icon>
@@ -37,6 +37,14 @@
             label="Project to be Assigned"
             prepend-icon="note"
           ></v-autocomplete>
+          <div class="caption font-weight-bold">
+            From <code>{{ week_start | formatDate }}</code> to
+            <code>{{ week_end | formatDate }}</code>
+          </div>
+          <app-fill-week-hours
+            ref="resethours"
+            @filledHours="allocation = $event"
+          ></app-fill-week-hours>
         </v-form>
       </v-card-text>
       <v-divider></v-divider>
@@ -48,7 +56,7 @@
           raised
           @click="
             dialog = false;
-            value_assignement();
+            valueAssignment();
           "
         >
           <v-icon left>cancel</v-icon>Cancel
@@ -70,11 +78,17 @@
 </template>
 
 <script>
+import AppFillWeekHours from "../Common/AppFillWeekHours.vue";
+
 import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js";
 
 export default {
   props: {
     employeeId: Number
+  },
+
+  components: {
+    "app-fill-week-hours": AppFillWeekHours
   },
 
   mixins: [storeDataPropertiesMixin],
@@ -83,12 +97,22 @@ export default {
     return {
       dialog: false,
       employee_name: null,
-      project: null
+      project: null,
+      allocation: [],
+      week_start: this.$moment()
+        .startOf("isoWeek")
+        .add(1, "week"),
+      week_end: this.$moment()
+        .startOf("isoWeek")
+        .add(1, "week")
+        .add(6, "days")
     };
   },
+
   methods: {
-    value_assignement() {
+    valueAssignment() {
       this.employee_name = this.appEmployee.employee_name;
+      // this.$refs.resethours.resetValues();
       // this.project = null
     },
 
@@ -102,7 +126,15 @@ export default {
       this.$updateEmployee(this.employeeId, {
         current_projects: {
           project: this.project,
-          allocation: []
+          allocation: [
+            {
+              week: [
+                this.week_start.format("YYYY-MM-DD"),
+                this.week_end.format("YYYY-MM-DD")
+              ],
+              hours: this.allocation
+            }
+          ]
         }
       })
         .then(() => {
@@ -135,11 +167,12 @@ export default {
             this.$emit("refresh");
           }, 500);
         });
-    }
+      // this.$refs.resethours.resetValues();
+    },
   },
 
   mounted() {
-    this.value_assignement();
+    this.valueAssignment();
   },
   computed: {
     appEmployee() {
@@ -151,7 +184,7 @@ export default {
     }
   },
 
-  watch: {}
+  watch: {},
 };
 </script>
 

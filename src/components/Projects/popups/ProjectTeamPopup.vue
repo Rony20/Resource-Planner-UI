@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="900px" v-model="dialog" persistent>
+  <v-dialog max-width="850px" v-model="dialog" persistent>
     <template v-slot:activator="{ on }">
       <v-btn icon slot="activator" v-on="on">
         <v-icon>input</v-icon>
@@ -23,7 +23,7 @@
                 <v-btn text small>Get Suggestions</v-btn>
               </v-btn-toggle>
             </v-col>
-            <v-col cols="12" sm="12">
+            <v-col cols="12" sm="12" md="12">
               <component
                 :is="current_component"
                 :projectKey="appProject.key"

@@ -1,15 +1,16 @@
 <template>
   <v-container fluid>
-    <requestslist></requestslist>
+    <request-list></request-list>
   </v-container>
 </template>
 
 <script>
-import requestslist from "../RequestsList/requestslist.vue";
+import RequestList from "../components/Requests/RequestList.vue";
 export default {
   name: "Requests",
+
   components: {
-    requestslist: requestslist
+    "request-list": RequestList
   }
 };
 </script>

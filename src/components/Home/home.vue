@@ -2,15 +2,6 @@
   <v-app>
     <app-navbar id="navbar"></app-navbar>
     <router-view></router-view>
-    <v-snackbar
-      right
-      top
-      v-model="snackbar.show"
-      :timeout="snackbar.timeout"
-      :color="snackbar.color"
-    >
-      {{ snackbar.text }}
-    </v-snackbar>
   </v-app>
 </template>
 
@@ -19,12 +10,18 @@ import Navbar from "../Navbar/Navbar.vue";
 
 export default {
   name: "Home",
+
   data() {
-    return { snackbar: this.$store.state.snackbar };
+    return {  };
   },
+
   components: {
     "app-navbar": Navbar
   },
+
+  methods: {
+  },
+ 
   watch: {
     $route(to) {
       document.title = to.meta.title || "Resource Planner";

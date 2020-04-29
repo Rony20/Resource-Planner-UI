@@ -8,10 +8,30 @@
           </v-toolbar-title>
 
           <v-spacer></v-spacer>
+          <div id="my-select" class="d-flex flex-row mt-7">
+            <v-select
+              v-model="projects_type"
+              :items="items"
+              dense
+              solo
+              outlined
+              single-line
+              flat
+            ></v-select>
 
-          <v-card-actions>
-            <v-row>
-              <v-col cols="12" sm="6" md="6">
+            <v-btn
+              class="ml-2"
+              color="info"
+              :loading="jira_loader"
+              @click="syncWithJira"
+            >
+              <v-icon left>autorenew</v-icon>Sync Jira
+            </v-btn>
+          </div>
+
+          <!-- <v-container class="mt-7">
+            <v-row class="justify-md-end justify-sm-center justify-xs-start">
+              <v-col cols="12" xs="1" sm="2" md="2">
                 <v-select
                   v-model="projects_type"
                   :items="items"
@@ -20,24 +40,25 @@
                   outlined
                   single-line
                   flat
-                  class="mt-6"
+                  height="20"
                 ></v-select>
               </v-col>
+              <v-col cols="12" xs="1" sm="2" md="2">
+                <v-btn
+                  class="ml-2"
+                  color="info"
+                  :loading="jira_loader"
+                  @click="syncWithJira"
+                >
+                  <v-icon left>autorenew</v-icon>Sync Jira
+                </v-btn>
+              </v-col>
             </v-row>
-
-            <v-btn
-              class="ma-2"
-              color="info"
-              :loading="jira_loader"
-              @click="syncWithJira"
-            >
-              <v-icon left>autorenew</v-icon>Sync Jira
-            </v-btn>
-          </v-card-actions>
+          </v-container> -->
         </v-toolbar>
       </v-card>
 
-      <project-list ref="syncload" :projectType="projects_type"></project-list>
+      <project-list ref="syncloadjira" :projectType="projects_type"></project-list>
     </v-app>
   </div>
 </template>
@@ -71,7 +92,7 @@ export default {
               text: "Projects are synced with JIRA!",
               type: "info"
             });
-            this.$refs.syncload.loadProjects();
+            this.$refs.syncloadjira.loadProjects();
           }
         })
         .catch(error => {
@@ -90,4 +111,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+  #my-select {
+    width: 300px;
+  }
+</style>

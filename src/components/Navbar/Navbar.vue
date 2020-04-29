@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-app-bar app dense id="navigationbar">
-      <v-icon left @click="refresh()">calendar_today</v-icon>
+    <v-app-bar dark app dense id="navigationbar">
+      <v-icon left @click="refresh()">how_to_reg</v-icon>
       <v-toolbar-title>Resource Planner</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn
@@ -44,36 +44,6 @@ export default {
     refresh() {
       this.$router.replace("/");
     },
-
-    loadDropdowns() {
-      this.$getAllDropdowns()
-        .then(response => {
-          let data = response.data;
-          this.$store.dispatch("GENERATE_SKILL_LIST", data["Skills"]);
-          this.$store.dispatch("GENERATE_PM_LIST", data["PM"]);
-        })
-        .catch(error => console.log(error));
-    },
-
-    loadProjects() {
-      this.$store.dispatch("RESET_PROJECT_LIST");
-
-      this.$getAllProjectsData()
-        .then(response => {
-          this.$store.dispatch("GENERATE_PROJECT_LIST", response.data);
-        })
-        .catch(error => console.log(error));
-    },
-
-    loadEmployees() {
-      this.$store.dispatch("RESET_EMPLOYEE_LIST");
-
-      this.$getAllEmployeesData()
-        .then(response => {
-          this.$store.dispatch("GENERATE_EMPLOYEE_LIST", response.data);
-        })
-        .catch(error => console.log(error));
-    }
   },
 
   computed: {
@@ -101,12 +71,6 @@ export default {
       }
     }
   },
-
-  created() {
-    this.loadProjects();
-    this.loadEmployees();
-    this.loadDropdowns();
-  }
 };
 </script>
 

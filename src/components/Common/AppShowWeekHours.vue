@@ -3,7 +3,7 @@
     <v-simple-table fixed-header class="elevation-2" dense>
       <template v-slot:default>
         <tbody>
-          <tr>
+          <tr v-if="showDays">
             <td
               class="text-center"
               v-for="n in 7"
@@ -18,9 +18,9 @@
               v-for="m in hoursArray"
               :key="m + Math.random() * Date.now()"
             >
-              <v-chip dark label :color="getHourColor(m)" x-small>
+              <v-btn depressed x-small :class="getHourColor(m)" class="my-1">
                 {{ m }}
-              </v-chip>
+              </v-btn>
             </td>
           </tr>
         </tbody>
@@ -32,7 +32,11 @@
 <script>
 export default {
   props: {
-    hoursArray: Array
+    hoursArray: Array,
+    showDays:{
+      type: Boolean,
+      default: true
+    }
   },
 
   data() {
@@ -43,8 +47,8 @@ export default {
 
   methods: {
     getHourColor(value) {
-      if (value === 8) return "green";
-      else if (value === 0) return "red";
+      if (value === 8) return "success";
+      else if (value === 0) return "error";
       else return "warning";
     }
   }

@@ -5,6 +5,7 @@
       :items="filteredEmployee"
       label="Select Employee"
       item-value="employee_id"
+      item-text="employee_name"
       multiple
       hide-selected
       hide-no-data
@@ -214,14 +215,6 @@ export default {
   computed: {
     appProject() {
       return this.$store.getters.getProjectByKey(this.projectKey);
-    },
-
-    appEmployees() {
-      return this.$store.getters.getEmployees;
-    },
-
-    appSkills() {
-      return this.$store.getters.getAllSkills;
     },
 
     filteredEmployee() {

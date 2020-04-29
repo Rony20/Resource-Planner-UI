@@ -21,10 +21,13 @@
         v-if="projectsType === 'current'"
         v-slot:item.current="{ item }"
       >
-        <app-show-week-hours 
-          class="ma-2"
-          :hoursArray="getCurrentAllocationHours(item.allocation)"
-        ></app-show-week-hours>
+        <div class="d-flex flex-row justify-center">
+          <app-show-week-hours
+            class="ma-2"
+            :showDays="false"
+            :hoursArray="getCurrentAllocationHours(item.allocation)"
+          ></app-show-week-hours>
+        </div>
       </template>
 
       <template v-if="projectsType === 'past'" v-slot:item.past="{ item }">
@@ -39,7 +42,7 @@
 <script>
 import AppShowWeekHours from "../Common/AppShowWeekHours.vue";
 
-import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js"
+import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js";
 
 export default {
   props: {
@@ -64,7 +67,7 @@ export default {
     },
 
     getCurrentAllocationHours(allocation) {
-      if (allocation.length === 0) return ['O','O','O','O','O','O','O'];
+      if (allocation.length === 0) return ["O", "O", "O", "O", "O", "O", "O"];
       let len = allocation.length;
       return allocation[len - 1]["hours"];
     },

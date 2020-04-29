@@ -9,7 +9,8 @@
           small
           v-on="on"
           :value="priority"
-          :color="getcolor(priority)"
+          :color="getColor(priority)"
+          :disabled="disabilityControl"
         >
           {{ priority }}
         </v-chip>
@@ -18,7 +19,7 @@
         <v-list-item
           v-for="(item, index) in priorities"
           :key="index"
-          @click="change_priority(item)"
+          @click="changePriority(item)"
         >
           <v-list-item-title>{{ item }}</v-list-item-title>
         </v-list-item>
@@ -29,25 +30,32 @@
 
 <script>
 export default {
-  name: "priorityComponent",
+  name: "RequestPriority",
+
+  props: {
+    priority: {
+      type: String,
+      default: null
+    },
+    disabilityControl: {
+      type: Boolean,
+      default: false
+    }
+  },
+
   data() {
     return {
       priorities: ["Urgent", "Medium"],
       new_priority: ""
     };
   },
-  props: {
-    priority: {
-      type: String,
-      default: null
-    }
-  },
+
   methods: {
-    change_priority(item) {
+    changePriority(item) {
       this.new_priority = item;
       this.$emit("priorityChanged", this.new_priority);
     },
-    getcolor(priority) {
+    getColor(priority) {
       switch (priority) {
         case "Urgent":
           return "red";

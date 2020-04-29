@@ -42,20 +42,16 @@
         item.lead | mapLeads(appLeads)
       }}</template>
       <template v-slot:item.actions="{ item }">
-        <v-row justify="space-around">
-          <v-col>
-            <project-edit-popup
-              :projectKey="item.key"
-              @refresh="loadProjects"
-            ></project-edit-popup>
-          </v-col>
-          <v-col>
-            <project-team-popup
-              :projectKey="item.key"
-              @refresh="loadProjects"
-            ></project-team-popup>
-          </v-col>
-        </v-row>
+        <div class="d-flex justify-space-around">
+          <project-edit-popup
+            :projectKey="item.key"
+            @refresh="loadProjects"
+          ></project-edit-popup>
+          <project-team-popup
+            :projectKey="item.key"
+            @refresh="loadProjects"
+          ></project-team-popup>
+        </div>
       </template>
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">
@@ -139,7 +135,7 @@ export default {
         case "Archived":
           return this.$store.getters.getArchivedProjects;
       }
-    },
+    }
   },
 
   created() {

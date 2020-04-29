@@ -22,7 +22,7 @@
         </v-toolbar>
       </v-card>
 
-      <employee-list></employee-list>
+      <employee-list ref="syncloadhrms"></employee-list>
 
     </v-app>
   </div>
@@ -42,7 +42,29 @@ export default {
   },
   methods: {
     syncWithHRMS(){
-
+      this.hrms_loader = true;
+      this.$syncHRMS()
+        .then(response => {
+          if (response.data === "success") {
+            this.$notify({
+              title: "Information",
+              text: "Employees are synced with HRMS!",
+              type: "info"
+            });
+            this.$refs.syncloadhrms.loadEmployees();
+          }
+        })
+        .catch(error => {
+          this.$notify({
+            title: "Error",
+            text: "Error in sync with HRMS!",
+            type: "error"
+          });
+          console.error(error);
+        })
+        .finally(() => {
+          this.hrms_loader = false;
+        });
     }
   }
 };
