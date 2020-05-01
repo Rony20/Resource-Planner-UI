@@ -28,7 +28,10 @@
             </v-avatar>
             {{ employee_name }}
           </p>
-
+          <div class="caption font-weight-bold my-2">
+            From <code>{{ week_start | formatDate }}</code> to
+            <code>{{ week_end | formatDate }}</code>
+          </div>
           <v-autocomplete
             v-model="project"
             :items="projectKeyList"
@@ -37,14 +40,6 @@
             label="Project to be Assigned"
             prepend-icon="note"
           ></v-autocomplete>
-          <div class="caption font-weight-bold">
-            From <code>{{ week_start | formatDate }}</code> to
-            <code>{{ week_end | formatDate }}</code>
-          </div>
-          <app-fill-week-hours
-            ref="resethours"
-            @filledHours="allocation = $event"
-          ></app-fill-week-hours>
         </v-form>
       </v-card-text>
       <v-divider></v-divider>
@@ -65,10 +60,7 @@
           color="primary"
           class="ma-2"
           raised
-          @click="
-            dialog = false;
-            assignEmployeeToProject();
-          "
+          @click="assignEmployeeToProject()"
         >
           <v-icon left>save</v-icon>Save
         </v-btn>
@@ -78,8 +70,6 @@
 </template>
 
 <script>
-import AppFillWeekHours from "../Common/AppFillWeekHours.vue";
-
 import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js";
 
 export default {
@@ -87,9 +77,7 @@ export default {
     employeeId: Number
   },
 
-  components: {
-    "app-fill-week-hours": AppFillWeekHours
-  },
+  components: {},
 
   mixins: [storeDataPropertiesMixin],
 
@@ -112,63 +100,56 @@ export default {
   methods: {
     valueAssignment() {
       this.employee_name = this.appEmployee.employee_name;
-      // this.$refs.resethours.resetValues();
-      // this.project = null
     },
 
     assignEmployeeToProject() {
-      this.$createUpdateTeam(this.project, {
-        allocated_employees: [this.employeeId]
-      })
-        .then()
-        .catch(error => console.log(error));
+      if (this.project) {
+        this.dialog = false;
 
-      this.$updateEmployee(this.employeeId, {
-        current_projects: {
-          project: this.project,
-          allocation: [
-            {
-              week: [
-                this.week_start.format("YYYY-MM-DD"),
-                this.week_end.format("YYYY-MM-DD")
-              ],
-              hours: this.allocation
-            }
-          ]
-        }
-      })
-        .then(() => {
-          this.$notify({
-            title: "Success",
-            text: `${
-              this.appEmployee["employee_name"]
-            } is assigned in "${this.$options.filters.mapProjects(
-              this.project,
-              this.appProjects
-            )}"`,
-            type: "success"
-          });
+        this.$updateEmployee(this.employeeId, {
+          current_projects: {
+            project_id: this.project,
+            allocation: []
+          }
         })
-        .catch(error => {
-          this.$notify({
-            title: "Error",
-            text: `Error in assigning ${
-              this.appEmployee["employee_name"]
-            } to "${this.$options.filters.mapProjects(
-              this.project,
-              this.appProjects
-            )}"`,
-            type: "error"
+          .then(() => {
+            this.$notify({
+              title: "Success",
+              text: `${
+                this.appEmployee["employee_name"]
+              } is assigned in "${this.$options.filters.mapProjects(
+                this.project,
+                this.appProjects
+              )}"`,
+              type: "success"
+            });
+          })
+          .catch(error => {
+            this.$notify({
+              title: "Error",
+              text: `Error in assigning ${
+                this.appEmployee["employee_name"]
+              } to "${this.$options.filters.mapProjects(
+                this.project,
+                this.appProjects
+              )}"`,
+              type: "error"
+            });
+            console.log(error);
+          })
+          .finally(() => {
+            setTimeout(() => {
+              this.$emit("refresh");
+            }, 500);
           });
-          console.log(error);
-        })
-        .finally(() => {
-          setTimeout(() => {
-            this.$emit("refresh");
-          }, 500);
+      } else {
+        this.$notify({
+          title: "Error",
+          text: "Select the project.",
+          type: "error"
         });
-      // this.$refs.resethours.resetValues();
-    },
+      }
+    }
   },
 
   mounted() {
@@ -184,7 +165,7 @@ export default {
     }
   },
 
-  watch: {},
+  watch: {}
 };
 </script>
 

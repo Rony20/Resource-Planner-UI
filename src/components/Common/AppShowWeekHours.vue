@@ -18,7 +18,7 @@
               v-for="m in hoursArray"
               :key="m + Math.random() * Date.now()"
             >
-              <v-btn depressed x-small :class="getHourColor(m)" class="my-1">
+              <v-btn depressed x-small dark class="my-1">
                 {{ m }}
               </v-btn>
             </td>

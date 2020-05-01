@@ -2,9 +2,9 @@
   <div id="app">
     <v-app id="inspire">
       <v-card color="grey lighten-4" flat height="50px" tile>
-        <v-toolbar dense>
+        <v-toolbar dense dark flat color="grey darken-1">
           <v-toolbar-title>
-            <v-icon color="black" left>people_alt</v-icon>Employees
+            <v-icon left>people_alt</v-icon>Employees
           </v-toolbar-title>
 
           <v-spacer></v-spacer>

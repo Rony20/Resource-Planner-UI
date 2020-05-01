@@ -9,12 +9,12 @@
     >
       <template v-slot:item.key="{ item }">
         <v-btn fab x-small dark depressed :color="color()">{{
-          item.project
+          item.project_id
         }}</v-btn>
       </template>
 
       <template v-slot:item.name="{ item }">
-        {{ item.project | mapProjects(appProjects) }}
+        {{ item.project_id | mapProjects(appProjects) }}
       </template>
 
       <template

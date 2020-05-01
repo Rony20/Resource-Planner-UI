@@ -2,9 +2,9 @@
   <div id="app">
     <v-app id="inspire">
       <v-card color="grey lighten-4" flat height="50px" tile>
-        <v-toolbar dense>
+        <v-toolbar dense dark flat color="grey darken-1">
           <v-toolbar-title>
-            <v-icon color="black" left>note</v-icon>Projects
+            <v-icon left>note</v-icon>Projects
           </v-toolbar-title>
 
           <v-spacer></v-spacer>
@@ -28,37 +28,13 @@
               <v-icon left>autorenew</v-icon>Sync Jira
             </v-btn>
           </div>
-
-          <!-- <v-container class="mt-7">
-            <v-row class="justify-md-end justify-sm-center justify-xs-start">
-              <v-col cols="12" xs="1" sm="2" md="2">
-                <v-select
-                  v-model="projects_type"
-                  :items="items"
-                  dense
-                  solo
-                  outlined
-                  single-line
-                  flat
-                  height="20"
-                ></v-select>
-              </v-col>
-              <v-col cols="12" xs="1" sm="2" md="2">
-                <v-btn
-                  class="ml-2"
-                  color="info"
-                  :loading="jira_loader"
-                  @click="syncWithJira"
-                >
-                  <v-icon left>autorenew</v-icon>Sync Jira
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-container> -->
         </v-toolbar>
       </v-card>
 
-      <project-list ref="syncloadjira" :projectType="projects_type"></project-list>
+      <project-list
+        ref="syncloadjira"
+        :projectType="projects_type"
+      ></project-list>
     </v-app>
   </div>
 </template>
@@ -112,7 +88,7 @@ export default {
 </script>
 
 <style scoped>
-  #my-select {
-    width: 300px;
-  }
+#my-select {
+  width: 300px;
+}
 </style>

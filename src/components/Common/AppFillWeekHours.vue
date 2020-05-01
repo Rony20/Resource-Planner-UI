@@ -48,8 +48,8 @@
                   x-small
                   depressed
                   v-on="on"
-                  :class="getClass(filledHour[n - 1])"
-                  class="my-1"
+                  class="my-1 white--text"
+                  color="black"
                   :disabled="disabilityControl"
                 >
                   {{ filledHour[n - 1] }}
@@ -164,7 +164,7 @@ export default {
     combined() {
       if (this.combined === 0) this.filledHour = [8, 8, 8, 8, 8, 8, 8];
       else if (this.combined === 1) this.filledHour = [8, 8, 8, 8, 8, 0, 0];
-      else this.filledHour = this.hoursArray;
+      else this.filledHour = [8, 8, 8, 8, 8, 0, 0];
       this.$emit("filledHours", this.filledHour)
     },
 

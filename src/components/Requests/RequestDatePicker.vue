@@ -8,7 +8,7 @@
         {{ week }}
       </div>
     </v-btn>
-    <v-btn small @click="nextWeek()">
+    <v-btn small :disabled="next_button_control" @click="nextWeek()">
       <v-icon>mdi-chevron-right</v-icon>
     </v-btn>
     <v-btn small @click="currentWeek()">
@@ -24,10 +24,18 @@
 export default {
   data() {
     return {
+      next_button_control: false,
       week_start: this.$moment()
         .startOf("isoWeek")
         .add(1, "week"),
       week_end: this.$moment()
+        .startOf("isoWeek")
+        .add(1, "week")
+        .add(6, "days"),
+      next_week_start: this.$moment()
+        .startOf("isoWeek")
+        .add(1, "week"),
+      next_week_end: this.$moment()
         .startOf("isoWeek")
         .add(1, "week")
         .add(6, "days")
@@ -55,11 +63,16 @@ export default {
         .add(6, "days");
     },
 
+    convertToDate(date) {
+      return date.format("DD-MM-YYYY");
+    },
+
+    convertToWeek(start, end) {
+      return [this.convertToDate(start), this.convertToDate(end)];
+    },
+
     refresh() {
-      this.loadRequests(
-        this.convertToDate(this.week_start),
-        this.convertToDate(this.week_end)
-      );
+        this.$emit("reload")
     }
   },
 
@@ -74,11 +87,18 @@ export default {
   watch: {
     week() {
       this.$emit("weekChanged", [this.week_start, this.week_end]);
+      if (
+        this.convertToDate(this.week_start) ===
+        this.convertToDate(this.next_week_start)
+      ) {
+        this.next_button_control = true;
+      } else this.next_button_control = false;
     }
   },
 
   created() {
     // this.$emit("weekChanged", [this.week_start, this.week_end]);
+    this.next_button_control = true
   }
 };
 </script>

@@ -46,7 +46,7 @@
           :key="project.project"
           class="mr-2"
         >
-            {{ project.project }}
+            {{ project.project_id }}
         </v-chip>
       </template>
       <template v-slot:item.actions="{ item }">

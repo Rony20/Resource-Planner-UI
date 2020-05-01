@@ -9,7 +9,6 @@
           small
           v-on="on"
           :value="priority"
-          :color="getColor(priority)"
           :disabled="disabilityControl"
         >
           {{ priority }}

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="600px" v-model="dialog" persistent>
+  <v-dialog max-width="800px" v-model="dialog" persistent>
     <template v-slot:activator="{ on }">
       <v-btn icon slot="activator" v-on="on">
         <v-icon>person_add</v-icon>
@@ -61,10 +61,12 @@
                   <v-list-item-content>
                     <v-list-item-title>
                       <v-row>
-                        <v-col md="4" cols="10">{{
+                        <v-col md="4" sm="4" cols="10">{{
                           data.item.employee_name
                         }}</v-col>
-                        <v-col md="6" cols="10">
+                      </v-row>
+                      <v-row>
+                        <v-col md="6" sm="6" cols="12">
                           <v-chip
                             small
                             label
@@ -116,8 +118,6 @@
 </template>
 
 <script>
-// import AppFillWeekHours from "../Common/AppFillWeekHours.vue";
-
 import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js";
 
 export default {
@@ -154,31 +154,6 @@ export default {
     resetData() {
       this.selected_employees = [];
     },
-
-    // saveRequest() {
-    //   this.selected_employees.forEach(employee_id => {
-    //     let request_obj = {
-    //       request_id: `${
-    //         this.projectKey
-    //       }-${employee_id}-${this.next_week_start.format("DDMMYYYY")}`,
-    //       project_id: this.projectKey,
-    //       pm_id: this.appProject.lead,
-    //       employee_id: employee_id,
-    //       priority: "Urgent",
-    //       requested_week: [
-    //         this.next_week_start.format("DD-MM-YYYY"),
-    //         this.next_week_end.format("DD-MM-YYYY")
-    //       ],
-    //       requested_hours: [0, 0, 0, 0, 0, 0, 0],
-    //       request_date: this.today.format("DD-MM-YYYY"),
-    //       request_status: "Intialized"
-    //     };
-    //     this.$saveRequest(request_obj)
-    //       .then(resp => console.log(resp))
-    //       .catch(error => console.log(error));
-    //   });
-    //   this.$emit("refresh")
-    // },
 
     saveRequest() {
       let new_employee_list = [];

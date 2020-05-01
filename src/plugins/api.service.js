@@ -58,12 +58,15 @@ const plugin = {
       });
     };
     Vue.prototype.$checkHours = function(employee_id, week_start, week_end) {
-      return axiosInstance.post("/check-hours/" + employee_id, null, {
+      return axiosInstance.post("check-hours/" + employee_id, null, {
         params: {
           week_start,
           week_end
         }
       });
+    };
+    Vue.prototype.$projectTeamByPm = function(pm_id) {
+      return axiosInstance.get("project-team-by-pm/" + pm_id)
     };
   }
 };
