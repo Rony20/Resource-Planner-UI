@@ -132,7 +132,7 @@
 </template>
 
 <script>
-import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js"
+import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js";
 
 export default {
   props: { projectKey: String },

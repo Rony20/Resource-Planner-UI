@@ -69,7 +69,7 @@ export default {
 
   computed: {
     appProject() {
-      return this.$store.getters.getProjectByKey(this.projectKey)
+      return this.$store.getters.getProjectByKey(this.projectKey);
     }
   },
 

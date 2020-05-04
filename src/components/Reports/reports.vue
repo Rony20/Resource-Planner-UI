@@ -9,8 +9,7 @@
 <script>
 export default {
   name: "Reports",
-  components: {
-  }
+  components: {}
 };
 </script>
 

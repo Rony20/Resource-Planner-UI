@@ -23,7 +23,6 @@
       </v-card>
 
       <employee-list ref="syncloadhrms"></employee-list>
-
     </v-app>
   </div>
 </template>
@@ -41,7 +40,7 @@ export default {
     };
   },
   methods: {
-    syncWithHRMS(){
+    syncWithHRMS() {
       this.hrms_loader = true;
       this.$syncHRMS()
         .then(response => {

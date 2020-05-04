@@ -6,7 +6,11 @@
         @reload="refresh()"
       ></request-date-picker>
     </div>
-    <component :ref="ref_value" :is="current_component" v-bind="currentProperties"></component>
+    <component
+      :ref="ref_value"
+      :is="current_component"
+      v-bind="currentProperties"
+    ></component>
   </div>
 </template>
 
@@ -31,7 +35,7 @@ export default {
   data() {
     return {
       current_component: "request-list-editable",
-      ref_value:"editable",
+      ref_value: "editable",
       week_start: this.$moment()
         .startOf("isoWeek")
         .add(1, "week"),

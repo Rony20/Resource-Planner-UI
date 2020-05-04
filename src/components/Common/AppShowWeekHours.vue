@@ -33,7 +33,7 @@
 export default {
   props: {
     hoursArray: Array,
-    showDays:{
+    showDays: {
       type: Boolean,
       default: true
     }

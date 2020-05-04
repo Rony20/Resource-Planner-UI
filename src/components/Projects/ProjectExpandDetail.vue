@@ -59,7 +59,7 @@
 <script>
 import ProjectAllocationTable from "./ProjectAllocationTable";
 
-import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js"
+import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js";
 
 export default {
   props: { projectKey: String },
@@ -78,7 +78,7 @@ export default {
     // eslint-disable-next-line vue/return-in-computed-property
     appProject() {
       return this.$store.getters.getProjectByKey(this.projectKey);
-    },
+    }
   }
 };
 </script>

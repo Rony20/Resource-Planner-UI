@@ -123,7 +123,7 @@ export default {
 
     setHour(index, hour) {
       this.filledHour[index] = hour;
-      this.$emit("filledHours", this.filledHour)
+      this.$emit("filledHours", this.filledHour);
     },
 
     saveHours() {
@@ -165,16 +165,16 @@ export default {
       if (this.combined === 0) this.filledHour = [8, 8, 8, 8, 8, 8, 8];
       else if (this.combined === 1) this.filledHour = [8, 8, 8, 8, 8, 0, 0];
       else this.filledHour = [8, 8, 8, 8, 8, 0, 0];
-      this.$emit("filledHours", this.filledHour)
+      this.$emit("filledHours", this.filledHour);
     },
 
-    disabilityControl(){
-      this.$emit("filledHours", this.filledHour)
+    disabilityControl() {
+      this.$emit("filledHours", this.filledHour);
     }
   },
 
   mounted() {
-    this.filledHour = this.hoursArray
+    this.filledHour = this.hoursArray;
   }
 };
 </script>

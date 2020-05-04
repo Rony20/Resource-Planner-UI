@@ -14,31 +14,37 @@
               <v-card-title class="grey--text">Requests</v-card-title>
               <v-divider></v-divider>
               <v-list-item-group>
-                <v-list-item
-                  v-for="id in Object.keys(requests)"
-                  :key="id"
-                  :href="'#' + id"
-                >
-                  <v-list-item-icon>
-                    <v-icon>play_arrow</v-icon>
-                  </v-list-item-icon>
-                  <v-list-item-content>
-                    <v-list-item-title>
-                      {{ id | mapProjects(appProjects) }}
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
+                <div id="list-item">
+                  <v-list-item
+                    v-for="id in Object.keys(requests).sort()"
+                    :key="id"
+                    @click="$vuetify.goTo('#' + id, options)"
+                  >
+                    <v-list-item-icon>
+                      <v-icon>play_arrow</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-subtitle>
+                        {{ id | mapProjects(appProjects) }}
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                </div>
               </v-list-item-group>
             </v-card>
           </v-col>
           <v-col cols="12" md="9">
-            <v-card v-for="id in Object.keys(requests)" :key="id" :id="id">
+            <v-card
+              v-for="id in Object.keys(requests).sort()"
+              :key="id"
+              :id="id"
+            >
               <v-card-title>
                 {{ id | mapProjects(appProjects) }}
                 <v-spacer></v-spacer>
                 <request-project-info :projectKey="id"></request-project-info>
               </v-card-title>
-              <v-card-subtitle class="white--text">
+              <v-card-subtitle>
                 Lead : {{ id | mapKeyWithPm(appProjects) | mapLeads(appLeads) }}
               </v-card-subtitle>
               <v-card-text>
@@ -116,19 +122,22 @@ export default {
           text: "Priority",
           value: "priority",
           align: "center",
-          width: "20%"
+          width: "20%",
+          sortable: false
         },
         {
           text: "Requested Hours",
           value: "hours",
           align: "center",
-          width: "35%"
+          width: "35%",
+          sortable: false
         },
         {
           text: "Status",
           value: "status",
           align: "center",
-          width: "20%"
+          width: "20%",
+          sortable: false
         }
       ]
     };
@@ -186,3 +195,11 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+#list-item {
+  overflow-y: scroll;
+  height: auto;
+  max-height: 300px;
+}
+</style>

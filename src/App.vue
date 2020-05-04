@@ -50,9 +50,13 @@ export default {
           this.$store.dispatch("GENERATE_EMPLOYEE_LIST", response.data);
         })
         .catch(error => console.log(error));
-    },
+    }
   },
-
+  computed: {
+    currentRoute() {
+      return this.$route.name;
+    }
+  },
   watch: {
     $route(to) {
       document.title = to.meta.title || "Resource Planner";
@@ -60,8 +64,22 @@ export default {
   },
 
   created() {
-    this.loadDropdowns();
-    this.loadEmployees();
+    switch (this.currentRoute) {
+      case "Projects":
+        this.loadDropdowns();
+        this.loadEmployees();
+        break;
+      case "Employees":
+        this.loadDropdowns();
+        this.loadProjects();
+        break;
+      default:
+        this.loadDropdowns();
+        this.loadProjects();
+        this.loadEmployees();
+    }
+    // this.loadDropdowns();
+    // this.loadEmployees();
   }
 };
 </script>

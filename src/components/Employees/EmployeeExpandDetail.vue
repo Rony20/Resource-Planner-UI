@@ -79,7 +79,6 @@
         ></employee-current-project-table>
       </v-col>
     </v-row>
-
   </v-container>
 </template>
 
@@ -87,7 +86,7 @@
 import EmployeeCurrentProjectTable from "./EmployeeCurrentProjectTable.vue";
 import AppShowWeekHours from "../Common/AppShowWeekHours";
 
-import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js"
+import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js";
 
 export default {
   props: {

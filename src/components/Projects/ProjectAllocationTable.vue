@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js"
+import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js";
 
 export default {
   props: { projectKey: String },
@@ -58,7 +58,7 @@ export default {
   computed: {
     appProject() {
       return this.$store.getters.getProjectByKey(this.projectKey);
-    },
+    }
   }
 };
 </script>

@@ -10,7 +10,6 @@
       </v-card>
 
       <request-list></request-list>
-
     </v-app>
   </div>
 </template>

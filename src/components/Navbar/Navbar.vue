@@ -43,7 +43,7 @@ export default {
   methods: {
     refresh() {
       this.$router.replace("/");
-    },
+    }
   },
 
   computed: {
@@ -70,7 +70,7 @@ export default {
           return [{ text: "Allocations", route: "/allocations" }];
       }
     }
-  },
+  }
 };
 </script>
 

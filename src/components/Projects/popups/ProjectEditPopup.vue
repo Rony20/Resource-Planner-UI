@@ -21,8 +21,6 @@
       </v-card-title>
       <v-divider></v-divider>
       <v-card-text class="mt-3">
-        {{ start_date }} - {{ end_date }}
-        {{ formatedStartDate }} - {{ formatedEndDate }}
         <v-form class="px-2">
           <v-text-field
             label="Project Name"
@@ -180,7 +178,7 @@ export default {
         ? this.$moment(this.appProject.end_date, "DD-MM-YYYY").format(
             "YYYY-MM-DD"
           )
-        : "";;
+        : "";
       this.skillsets = this.appProject.skillsets;
     },
 
@@ -193,9 +191,11 @@ export default {
           ? this.project_lead
           : this.appProject.lead,
         start_date: this.start_date
-          ? this.start_date
+          ? this.formatedStartDate
           : this.appProject.start_date,
-        end_date: this.end_date ? this.end_date : this.appProject.end_date,
+        end_date: this.end_date
+          ? this.formatedEndDate
+          : this.appProject.end_date,
         skillset: this.skillsets
       };
       this.$editProjectDetailsPmo(this.appProject.key, edit_object)

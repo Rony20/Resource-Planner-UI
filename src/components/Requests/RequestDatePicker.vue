@@ -72,7 +72,7 @@ export default {
     },
 
     refresh() {
-        this.$emit("reload")
+      this.$emit("reload");
     }
   },
 
@@ -97,8 +97,7 @@ export default {
   },
 
   created() {
-    // this.$emit("weekChanged", [this.week_start, this.week_end]);
-    this.next_button_control = true
+    this.next_button_control = true;
   }
 };
 </script>

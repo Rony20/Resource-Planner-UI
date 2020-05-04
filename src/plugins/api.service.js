@@ -65,8 +65,13 @@ const plugin = {
         }
       });
     };
-    Vue.prototype.$projectTeamByPm = function(pm_id) {
-      return axiosInstance.get("project-team-by-pm/" + pm_id)
+    Vue.prototype.$projectTeamByPm = function(pm_id, week_start, week_end) {
+      return axiosInstance.post("project-team-by-pm/" + pm_id, null, {
+        params: {
+          week_start,
+          week_end
+        }
+      });
     };
   }
 };

@@ -15,28 +15,49 @@
           label="Weekends"
           v-if="!disability_control"
         ></v-checkbox>
+        <v-checkbox
+          class="ml-2"
+          dense
+          v-model="select_all"
+          label="selectAll"
+          v-if="!disability_control"
+        ></v-checkbox>
       </div>
       <v-spacer></v-spacer>
-      <div class="d-flex flex-row mt-3">
-        <v-btn
-          text
-          small
+      <div class="d-flex flex-row mt-4">
+        <div id="my-select">
+          <v-select
+            v-model="request_type_selected"
+            :items="request_type"
+            dense
+            v-if="!load_button_visibility"
+            class="mx-2"
+          ></v-select>
+        </div>
+        <v-btn-toggle
           class="mx-2"
-          @click="loadRequests(next_week_start, next_week_end)"
           v-if="load_button_visibility"
-          >Load previous requests</v-btn
+          v-model="load_button_value"
         >
-        <v-btn
-          text
-          small
-          class="mx-2"
-          @click="loadRequestsFromProject()"
-          v-if="load_button_visibility"
-          >Load from projects</v-btn
-        >
+          <v-btn
+            text
+            small
+            @click="
+              loadRequests(
+                convertToDate(next_week_start),
+                convertToDate(next_week_end)
+              )
+            "
+            >Load previous requests</v-btn
+          >
+          <v-btn text small @click="loadRequestsFromProject()"
+            >Load from projects</v-btn
+          >
+        </v-btn-toggle>
         <v-btn
           tile
           small
+          depressed
           class="mx-2"
           :disabled="!disability_control"
           @click="disability_control = false"
@@ -45,6 +66,7 @@
         <v-btn
           tile
           small
+          depressed
           :disabled="disability_control"
           class="mx-2"
           @click="saveRequests()"
@@ -70,17 +92,17 @@
                 <v-list-item-group>
                   <div id="list-item">
                     <v-list-item
-                      v-for="id in Object.keys(requests)"
+                      v-for="id in Object.keys(requests).sort()"
                       :key="id"
-                      :href="'#' + id"
+                      @click="$vuetify.goTo('#' + id, options)"
                     >
                       <v-list-item-icon>
                         <v-icon>play_arrow</v-icon>
                       </v-list-item-icon>
                       <v-list-item-content>
-                        <v-list-item-title>
+                        <v-list-item-subtitle>
                           {{ id | mapProjects(appProjects) }}
-                        </v-list-item-title>
+                        </v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
                   </div>
@@ -92,7 +114,7 @@
             <div>
               <v-card
                 class="mb-4"
-                v-for="id in Object.keys(requests)"
+                v-for="id in Object.keys(requests).sort()"
                 :key="id"
                 :id="id"
               >
@@ -122,7 +144,8 @@
                   >
                     <template v-slot:item.employee_name="{ item }">
                       <div>
-                        {{ item.employee_id | mapEmployees(appEmployees) }}
+                        {{ item.employee_id | mapEmployees(appEmployees)
+                        }}<v-icon right v-if="false">error</v-icon>
                       </div>
                     </template>
 
@@ -140,10 +163,7 @@
                         :autofill="autofill"
                         :weekend="weekend"
                         :hoursArray="item.requested_hours"
-                        @filledHours="
-                          item.requested_hours = $event;
-                          check(item.employee_id, item.requested_hours);
-                        "
+                        @filledHours="item.requested_hours = $event"
                       ></app-fill-week-hours>
                     </template>
 
@@ -189,11 +209,15 @@ export default {
       request_loader: false,
       autofill: false,
       weekend: false,
+      select_all: false,
+      error: false,
+      request_type_selected: "Requested Requests",
+      request_type: ["Requested Requests", "Remaining Requests"],
       selected: [],
       requests: {},
       pm: 19,
-      load_button_text: "load from projects",
-      load_button_visibility: true,
+      load_button_value: 0,
+      load_button_visibility: false,
       disability_control: false,
       today: this.$moment(),
       next_week_start: this.$moment()
@@ -218,19 +242,22 @@ export default {
           text: "Priority",
           value: "priority",
           align: "center",
-          width: "20%"
+          width: "20%",
+          sortable: false
         },
         {
           text: "Requested Hours",
           value: "hours",
           align: "center",
-          width: "35%"
+          width: "35%",
+          sortable: false
         },
         {
           text: "Status",
           value: "status",
           align: "center",
-          width: "20%"
+          width: "20%",
+          sortable: false
         }
       ]
     };
@@ -246,6 +273,7 @@ export default {
     },
 
     reload() {
+      this.request_type_selected = "Requested Requests";
       this.loadRequests(
         this.convertToDate(this.next_week_start),
         this.convertToDate(this.next_week_end)
@@ -258,38 +286,55 @@ export default {
       });
     },
 
-    check(employee_id, requested_hours) {
+    check(employee_id) {
+      var conflict = false;
       this.$checkHours(
         employee_id,
         this.convertToDate(this.next_week_start),
         this.convertToDate(this.next_week_end)
       )
         .then(response => {
-          for (let i = 0; i < 6; i++) {
-            if (requested_hours[i] + response.data[i] > 8) {
-              this.$notify({
-                title: "Warning",
-                text: `Day ${i + 1} hours have to be ${8 -
-                  response.data[i]} or less than ${8 - response.data[i]}`,
-                type: "warning"
-              });
-            }
-          }
+          console.log(response.data, "inside");
+          conflict = response.data;
         })
-        .catch(error => console.log(error));
+        .catch(error => console.log(error))
+        .finally();
+      return conflict;
+    },
+
+    clearAll() {
+      this.selected = [];
+    },
+
+    selectAll() {
+      this.selected = [];
+      let selected = [];
+      for (let key in this.requests) {
+        this.requests[key].forEach(request => {
+          selected.push(request);
+        });
+      }
+      this.selected = [...selected];
     },
 
     loadRequests(week_start, week_end) {
       this.requests = {};
       let requests = {};
+      this.selected = [];
       this.request_loader = true;
 
       this.$getRequestsByDate(this.pm, week_start, week_end)
         .then(response => {
           if (response.data.length === 0) {
             this.load_button_visibility = true;
+            this.disability_control = false;
+            this.load_button_value = 0;
+            this.select_all = false;
+            this.weekend = false;
+            this.autofill = false;
             this.loadPreviousWeekRequests();
           } else {
+            this.disability_control = true;
             this.load_button_visibility = false;
             response.data.forEach(element => {
               let request_object = {
@@ -353,7 +398,14 @@ export default {
     loadRequestsFromProject() {
       this.requests = {};
       this.request_loader = true;
-      this.$projectTeamByPm(this.pm)
+      this.weekend = false;
+      this.autofill = false;
+      this.select_all = false;
+      this.$projectTeamByPm(
+        this.pm,
+        this.convertToDate(this.next_week_start),
+        this.convertToDate(this.next_week_end)
+      )
         .then(response => {
           let requests = {};
           for (let key in response.data) {
@@ -387,6 +439,7 @@ export default {
         });
       } else {
         this.disability_control = true;
+        console.log(this.selected);
         this.selected.forEach(emp => {
           let request_obj = {
             request_id: `${emp.project_id}-${
@@ -413,6 +466,7 @@ export default {
           text: "Request For next week has been made successfully.",
           type: "success"
         });
+        this.request_type_selected = "Requested Requests";
         this.loadRequests(
           this.convertToDate(this.next_week_start),
           this.convertToDate(this.next_week_end)
@@ -421,11 +475,34 @@ export default {
     }
   },
 
+  watch: {
+    request_type_selected() {
+      if (!this.load_button_visibility) {
+        if (this.request_type_selected === "Requested Requests") {
+          this.loadRequests(
+            this.convertToDate(this.next_week_start),
+            this.convertToDate(this.next_week_end)
+          );
+        }
+        if (this.request_type_selected === "Remaining Requests") {
+          this.disability_control = false;
+          this.loadRequestsFromProject();
+        }
+      }
+    },
+
+    select_all() {
+      if (this.select_all) this.selectAll();
+      else this.clearAll();
+    }
+  },
+
   created() {
     this.loadRequests(
       this.convertToDate(this.next_week_start),
       this.convertToDate(this.next_week_end)
     );
+    console.log(this.check(437));
   }
 };
 </script>
@@ -433,10 +510,6 @@ export default {
 <style scoped>
 #requests {
   position: relative;
-  /* overflow-y: scroll;
-  height: 600px;
-  border: 2px solid #c6c6cf;
-  box-shadow: 2px 2px #c6c6cf; */
 }
 #request-list {
   position: fixed;
@@ -444,6 +517,10 @@ export default {
 }
 #list-item {
   overflow-y: scroll;
-  height: 300px;
+  height: auto;
+  max-height: 300px;
+}
+#my-select {
+  width: 210px;
 }
 </style>
