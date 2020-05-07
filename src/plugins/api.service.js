@@ -47,31 +47,27 @@ const plugin = {
       return axiosInstance.get("all-requests");
     };
     Vue.prototype.$saveRequest = function(payload) {
-      return axiosInstance.post("save-request", payload);
+      return axiosInstance.post("make-new-request", payload);
     };
-    Vue.prototype.$getRequestsByDate = function(pm_id, week_start, week_end) {
-      return axiosInstance.post("request-by-date/" + pm_id, null, {
+    Vue.prototype.$getRequestsForPm = function(pm_id, week_start, week_end) {
+      return axiosInstance.get("get-all-requests-by-pm/" + pm_id, {
         params: {
           week_start,
           week_end
         }
       });
     };
-    Vue.prototype.$checkHours = function(employee_id, week_start, week_end) {
-      return axiosInstance.post("check-hours/" + employee_id, null, {
+    Vue.prototype.$checkConflict = function(employee_id, pm_id) {
+      return axiosInstance.get("check-conflicts/" + employee_id, {
         params: {
-          week_start,
-          week_end
+          pm_id
         }
       });
     };
-    Vue.prototype.$projectTeamByPm = function(pm_id, week_start, week_end) {
-      return axiosInstance.post("project-team-by-pm/" + pm_id, null, {
-        params: {
-          week_start,
-          week_end
-        }
-      });
+    Vue.prototype.$projectTeamByPm = function(pm_id) {
+      return axiosInstance.get(
+        "get-projects-with-remaining-requests-by-pm/" + pm_id
+      );
     };
   }
 };

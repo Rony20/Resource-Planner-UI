@@ -149,7 +149,7 @@ export default {
       let requests = {};
       this.request_loader = true;
 
-      this.$getRequestsByDate(this.pm, week_start, week_end)
+      this.$getRequestsForPm(this.pm, week_start, week_end)
         .then(response => {
           response.data.forEach(element => {
             let request_object = {

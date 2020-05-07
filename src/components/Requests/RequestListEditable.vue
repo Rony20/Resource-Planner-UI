@@ -94,7 +94,7 @@
                     <v-list-item
                       v-for="id in Object.keys(requests).sort()"
                       :key="id"
-                      @click="$vuetify.goTo('#' + id, options)"
+                      @click="$vuetify.goTo('#' + id)"
                     >
                       <v-list-item-icon>
                         <v-icon>play_arrow</v-icon>
@@ -143,9 +143,10 @@
                     class="elevation-2"
                   >
                     <template v-slot:item.employee_name="{ item }">
+                      {{ checkConflict(item) }}
                       <div>
                         {{ item.employee_id | mapEmployees(appEmployees)
-                        }}<v-icon right v-if="false">error</v-icon>
+                        }}<v-icon right v-if="item.is_conflicted"></v-icon>
                       </div>
                     </template>
 
@@ -215,7 +216,7 @@ export default {
       request_type: ["Requested Requests", "Remaining Requests"],
       selected: [],
       requests: {},
-      pm: 19,
+      pm: 9,
       load_button_value: 0,
       load_button_visibility: false,
       disability_control: false,
@@ -286,20 +287,12 @@ export default {
       });
     },
 
-    check(employee_id) {
-      var conflict = false;
-      this.$checkHours(
-        employee_id,
-        this.convertToDate(this.next_week_start),
-        this.convertToDate(this.next_week_end)
-      )
+    checkConflict(item) {
+      this.$checkConflict(item.employee_id, item.pm_id)
         .then(response => {
-          console.log(response.data, "inside");
-          conflict = response.data;
+          item.is_conflicted = response.data["conflicted"];
         })
-        .catch(error => console.log(error))
-        .finally();
-      return conflict;
+        .catch(error => console.log(error));
     },
 
     clearAll() {
@@ -323,7 +316,7 @@ export default {
       this.selected = [];
       this.request_loader = true;
 
-      this.$getRequestsByDate(this.pm, week_start, week_end)
+      this.$getRequestsForPm(this.pm, week_start, week_end)
         .then(response => {
           if (response.data.length === 0) {
             this.load_button_visibility = true;
@@ -367,7 +360,7 @@ export default {
 
     loadPreviousWeekRequests() {
       let prev_requests = {};
-      this.$getRequestsByDate(
+      this.$getRequestsForPm(
         this.pm,
         this.convertToDate(this.current_week_start),
         this.convertToDate(this.current_week_end)
@@ -380,7 +373,8 @@ export default {
               employee_id: element["employee_id"],
               priority: element["priority"],
               requested_hours: element["requested_hours"],
-              request_status: "Initiated"
+              request_status: "Initiated",
+              is_conflicted: false
             };
 
             if (request_object.project_id in prev_requests) {
@@ -401,11 +395,7 @@ export default {
       this.weekend = false;
       this.autofill = false;
       this.select_all = false;
-      this.$projectTeamByPm(
-        this.pm,
-        this.convertToDate(this.next_week_start),
-        this.convertToDate(this.next_week_end)
-      )
+      this.$projectTeamByPm(this.pm)
         .then(response => {
           let requests = {};
           for (let key in response.data) {
@@ -417,7 +407,8 @@ export default {
                 employee_id: id,
                 priority: "Urgent",
                 requested_hours: [8, 8, 8, 8, 8, 0, 0],
-                request_status: "Initiated"
+                request_status: "Initiated",
+                is_conflicted: false
               };
               requests[key].push(request_object);
             });
@@ -454,8 +445,7 @@ export default {
               this.next_week_end.format("DD-MM-YYYY")
             ],
             requested_hours: emp.requested_hours,
-            request_date: this.today.format("DD-MM-YYYY"),
-            request_status: "pending"
+            request_date: this.today.format("DD-MM-YYYY")
           };
           this.$saveRequest(request_obj)
             .then()
@@ -502,7 +492,6 @@ export default {
       this.convertToDate(this.next_week_start),
       this.convertToDate(this.next_week_end)
     );
-    console.log(this.check(437));
   }
 };
 </script>
