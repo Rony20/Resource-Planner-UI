@@ -6,11 +6,13 @@ import vuetify from "./plugins/vuetify";
 import Notifications from "vue-notification";
 import "material-design-icons-iconfont/dist/material-design-icons.css";
 import axiosInstance from "./plugins/api.service";
+import axiosAuthInstance from "./plugins/api.service.auth"
 import Moment from "moment";
 
 Vue.config.productionTip = false;
 Vue.use(Notifications);
 Vue.use(axiosInstance);
+Vue.use(axiosAuthInstance)
 
 Moment.locale("en");
 Object.defineProperty(Vue.prototype, "$moment", { value: Moment });

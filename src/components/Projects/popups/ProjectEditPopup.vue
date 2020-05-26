@@ -108,6 +108,29 @@
                 solo
               ></v-autocomplete>
             </v-col>
+            <v-col cols="12" sm="12">
+              <div class="caption">
+                <v-icon left>supervisor_account</v-icon>Allowed Users
+              </div>
+            </v-col>
+            <v-col cols="12" sm="12">
+              <v-autocomplete
+                v-model="allowed_users"
+                :items="appLeads"
+                item-text="value"
+                item-value="code"
+                chips
+                deletable-chips
+                small-chips
+                multiple
+                clearable
+                counter
+                label="Allowed Users"
+                hide-selected
+                hide-no-data
+                solo
+              ></v-autocomplete>
+            </v-col>
           </v-row>
         </v-form>
       </v-card-text>
@@ -161,7 +184,8 @@ export default {
       end_date_selector: false,
       skillsets: null,
       skills: null,
-      leads: null
+      leads: null,
+      allowed_users: null
     };
   },
 
@@ -180,6 +204,7 @@ export default {
           )
         : "";
       this.skillsets = this.appProject.skillsets;
+      this.allowed_users = this.appProject.allowed_users;
     },
 
     saveProjectDetails() {
@@ -196,7 +221,8 @@ export default {
         end_date: this.end_date
           ? this.formatedEndDate
           : this.appProject.end_date,
-        skillset: this.skillsets
+        skillset: this.skillsets,
+        allowed_users: this.allowed_users
       };
       this.$editProjectDetailsPmo(this.appProject.key, edit_object)
         .then(() => {
@@ -231,7 +257,9 @@ export default {
         this.appProject.start_date !== this.formatedStartDate ||
         this.appProject.end_date !== this.formatedEndDate ||
         JSON.stringify([...this.appProject.skillsets].sort()) !==
-          JSON.stringify([...this.skillsets].sort())
+          JSON.stringify([...this.skillsets].sort()) ||
+        JSON.stringify([...this.appProject.allowed_users].sort()) !==
+          JSON.stringify([...this.allowed_users].sort())
       );
     },
 

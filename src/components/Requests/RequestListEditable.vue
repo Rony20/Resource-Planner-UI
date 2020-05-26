@@ -143,7 +143,6 @@
                     class="elevation-2"
                   >
                     <template v-slot:item.employee_name="{ item }">
-                      {{ checkConflict(item) }}
                       <div>
                         {{ item.employee_id | mapEmployees(appEmployees)
                         }}<v-icon right v-if="item.is_conflicted"></v-icon>
@@ -216,7 +215,7 @@ export default {
       request_type: ["Requested Requests", "Remaining Requests"],
       selected: [],
       requests: {},
-      pm: 9,
+      pm: 19,
       load_button_value: 0,
       load_button_visibility: false,
       disability_control: false,
@@ -421,7 +420,7 @@ export default {
         });
     },
 
-    saveRequests() {
+    async saveRequests() {
       if (this.selected.length === 0) {
         this.$notify({
           title: "Warning",
@@ -431,7 +430,7 @@ export default {
       } else {
         this.disability_control = true;
         console.log(this.selected);
-        this.selected.forEach(emp => {
+        await this.selected.forEach(async emp => {
           let request_obj = {
             request_id: `${emp.project_id}-${
               emp.employee_id
@@ -447,9 +446,10 @@ export default {
             requested_hours: emp.requested_hours,
             request_date: this.today.format("DD-MM-YYYY")
           };
-          this.$saveRequest(request_obj)
-            .then()
-            .catch(error => console.log(error));
+          // this.$saveRequest(request_obj)
+          //   .then()
+          //   .catch(error => console.log(error));
+          await this.$saveRequest(request_obj)
         });
         this.$notify({
           title: "Success",

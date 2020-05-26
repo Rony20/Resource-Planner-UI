@@ -47,7 +47,11 @@ const plugin = {
       return axiosInstance.get("all-requests");
     };
     Vue.prototype.$saveRequest = function(payload) {
-      return axiosInstance.post("make-new-request", payload);
+      return axiosInstance.post("make-new-request", payload, {
+        params: {
+          conflicted: false
+        }
+      });
     };
     Vue.prototype.$getRequestsForPm = function(pm_id, week_start, week_end) {
       return axiosInstance.get("get-all-requests-by-pm/" + pm_id, {

@@ -78,8 +78,6 @@ export default {
         this.loadProjects();
         this.loadEmployees();
     }
-    // this.loadDropdowns();
-    // this.loadEmployees();
   }
 };
 </script>

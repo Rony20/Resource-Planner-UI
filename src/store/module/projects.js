@@ -42,7 +42,8 @@ const mutations = {
         team: element["allocated_employees"],
         start_date: element["start_date"],
         end_date: element["end_date"],
-        description: element["description"]
+        description: element["description"],
+        allowed_users: element["allowed_users"] 
       };
       state.projects.push(project_object);
     });
