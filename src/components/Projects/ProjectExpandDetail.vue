@@ -13,11 +13,11 @@
     <v-divider></v-divider>
     <v-row>
       <v-col cols="12" sm="12" md="6">
-        <div class="d-flex caption grey--text">Start Date (YYYY/MM/DD)</div>
+        <div class="d-flex caption grey--text">Start Date (DD-MM-YYYY)</div>
         <div class="subtitle-1">{{ appProject.start_date }}</div>
       </v-col>
       <v-col cols="12" sm="12" md="6">
-        <div class="d-flex caption grey--text">End Date (YYYY/MM/DD)</div>
+        <div class="d-flex caption grey--text">End Date (DD-MM-YYYY)</div>
         <div class="subtitle-1">{{ appProject.end_date }}</div>
       </v-col>
     </v-row>
@@ -59,7 +59,7 @@
 <script>
 import ProjectAllocationTable from "./ProjectAllocationTable";
 
-import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js"
+import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js";
 
 export default {
   props: { projectKey: String },
@@ -78,7 +78,7 @@ export default {
     // eslint-disable-next-line vue/return-in-computed-property
     appProject() {
       return this.$store.getters.getProjectByKey(this.projectKey);
-    },
+    }
   }
 };
 </script>

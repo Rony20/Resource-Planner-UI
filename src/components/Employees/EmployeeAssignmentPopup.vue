@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="500px" v-model="dialog" persistent>
+  <v-dialog max-width="600px" v-model="dialog" persistent>
     <template v-slot:activator="{ on }">
       <v-btn icon slot="activator" v-on="on">
         <v-icon>assignment</v-icon>
@@ -13,7 +13,7 @@
           icon
           @click="
             dialog = false;
-            value_assignement();
+            valueAssignment();
           "
         >
           <v-icon>close</v-icon>
@@ -28,7 +28,10 @@
             </v-avatar>
             {{ employee_name }}
           </p>
-
+          <div class="caption font-weight-bold my-2">
+            From <code>{{ week_start | formatDate }}</code> to
+            <code>{{ week_end | formatDate }}</code>
+          </div>
           <v-autocomplete
             v-model="project"
             :items="projectKeyList"
@@ -48,7 +51,7 @@
           raised
           @click="
             dialog = false;
-            value_assignement();
+            valueAssignment();
           "
         >
           <v-icon left>cancel</v-icon>Cancel
@@ -57,10 +60,7 @@
           color="primary"
           class="ma-2"
           raised
-          @click="
-            dialog = false;
-            assignEmployeeToProject();
-          "
+          @click="assignEmployeeToProject()"
         >
           <v-icon left>save</v-icon>Save
         </v-btn>
@@ -77,69 +77,83 @@ export default {
     employeeId: Number
   },
 
+  components: {},
+
   mixins: [storeDataPropertiesMixin],
 
   data() {
     return {
       dialog: false,
       employee_name: null,
-      project: null
+      project: null,
+      allocation: [],
+      week_start: this.$moment()
+        .startOf("isoWeek")
+        .add(1, "week"),
+      week_end: this.$moment()
+        .startOf("isoWeek")
+        .add(1, "week")
+        .add(6, "days")
     };
   },
+
   methods: {
-    value_assignement() {
+    valueAssignment() {
       this.employee_name = this.appEmployee.employee_name;
-      // this.project = null
     },
 
     assignEmployeeToProject() {
-      this.$createUpdateTeam(this.project, {
-        allocated_employees: [this.employeeId]
-      })
-        .then()
-        .catch(error => console.log(error));
+      if (this.project) {
+        this.dialog = false;
 
-      this.$updateEmployee(this.employeeId, {
-        current_projects: {
-          project: this.project,
-          allocation: []
-        }
-      })
-        .then(() => {
-          this.$notify({
-            title: "Success",
-            text: `${
-              this.appEmployee["employee_name"]
-            } is assigned in "${this.$options.filters.mapProjects(
-              this.project,
-              this.appProjects
-            )}"`,
-            type: "success"
-          });
+        this.$updateEmployee(this.employeeId, {
+          current_projects: {
+            project_id: this.project,
+            allocation: []
+          }
         })
-        .catch(error => {
-          this.$notify({
-            title: "Error",
-            text: `Error in assigning ${
-              this.appEmployee["employee_name"]
-            } to "${this.$options.filters.mapProjects(
-              this.project,
-              this.appProjects
-            )}"`,
-            type: "error"
+          .then(() => {
+            this.$notify({
+              title: "Success",
+              text: `${
+                this.appEmployee["employee_name"]
+              } is assigned in "${this.$options.filters.mapProjects(
+                this.project,
+                this.appProjects
+              )}"`,
+              type: "success"
+            });
+          })
+          .catch(error => {
+            this.$notify({
+              title: "Error",
+              text: `Error in assigning ${
+                this.appEmployee["employee_name"]
+              } to "${this.$options.filters.mapProjects(
+                this.project,
+                this.appProjects
+              )}"`,
+              type: "error"
+            });
+            console.log(error);
+          })
+          .finally(() => {
+            setTimeout(() => {
+              this.$emit("refresh");
+            }, 500);
           });
-          console.log(error);
-        })
-        .finally(() => {
-          setTimeout(() => {
-            this.$emit("refresh");
-          }, 500);
+      } else {
+        this.$notify({
+          title: "Error",
+          text: "Select the project.",
+          type: "error"
         });
+      }
     }
   },
 
   mounted() {
-    this.value_assignement();
+    this.valueAssignment();
   },
   computed: {
     appEmployee() {

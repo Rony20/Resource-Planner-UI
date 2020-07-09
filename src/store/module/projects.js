@@ -1,5 +1,5 @@
 const state = {
-  projects: [],
+  projects: []
 };
 
 const getters = {
@@ -18,21 +18,21 @@ const getters = {
   getProjectKeyList: state => {
     return state.projects.map(project => {
       return { key: project.key, name: project.name };
-    })
+    });
   },
 
   getProjectByKey: state => key => {
-    return state.projects.find(project => project.key === key)
+    return state.projects.find(project => project.key === key);
   }
 };
 
 const mutations = {
-  RESET_PROJECT_LIST: (state) => {
+  RESET_PROJECT_LIST: state => {
     state.projects = [];
   },
 
   GENERATE_PROJECT_LIST: (state, data) => {
-    data.forEach((element) => {
+    data.forEach(element => {
       let project_object = {
         key: element["project_id"],
         name: element["project_name"],
@@ -43,24 +43,29 @@ const mutations = {
         start_date: element["start_date"],
         end_date: element["end_date"],
         description: element["description"],
+        allowed_users: element["allowed_users"] 
       };
       state.projects.push(project_object);
     });
   },
 
   UPDATE_PROJECT_PMO: (state, data) => {
-    let project_obj = state.projects.find( project => project.key === data["project_id"])
-    console.log(data["project_id"])
-    project_obj["name"] = data["project_name"]
-    project_obj["lead"] = data["assigned_pm"]
-    project_obj["start_date"] = data["start_date"]
-    project_obj["end_date"] = data["end_date"]
-    project_obj["skillsets"] = data["skillset"]
+    let project_obj = state.projects.find(
+      project => project.key === data["project_id"]
+    );
+    console.log(data["project_id"]);
+    project_obj["name"] = data["project_name"];
+    project_obj["lead"] = data["assigned_pm"];
+    project_obj["start_date"] = data["start_date"];
+    project_obj["end_date"] = data["end_date"];
+    project_obj["skillsets"] = data["skillset"];
   },
 
   CREATE_UPDATE_TEAM: (state, data) => {
-    let project_obj = state.projects.find(project => project.key === data["project_id"])
-    project_obj["team"] = data["allocated_employees"]
+    let project_obj = state.projects.find(
+      project => project.key === data["project_id"]
+    );
+    project_obj["team"] = data["allocated_employees"];
   }
 };
 
@@ -74,11 +79,11 @@ const actions = {
   },
 
   UPDATE_PROJECT_PMO: ({ commit }, payload) => {
-    commit("UPDATE_PROJECT_PMO", payload)
+    commit("UPDATE_PROJECT_PMO", payload);
   },
 
   CREATE_UPDATE_TEAM: ({ commit }, payload) => {
-    commit("CREATE_UPDATE_TEAM", payload)
+    commit("CREATE_UPDATE_TEAM", payload);
   }
 };
 
@@ -86,5 +91,5 @@ export default {
   state,
   getters,
   mutations,
-  actions,
+  actions
 };

@@ -38,17 +38,23 @@
     <v-row>
       <v-col cols="12" md="6">
         <div class="caption d-flex grey--text">Current Availibility</div>
-        <app-show-week-hours
-          class="mt-2"
-          :hoursArray="appEmployee.availability['current']"
-        ></app-show-week-hours>
+        <div class="d-flex flex-row justify-left">
+          <app-show-week-hours
+            class="mt-2"
+            :showDays="false"
+            :hoursArray="appEmployee.availability['current']"
+          ></app-show-week-hours>
+        </div>
       </v-col>
       <v-col cols="12" md="6">
         <div class="caption d-flex grey--text">Next Week Availibility</div>
-        <app-show-week-hours
-          class="mt-2"
-          :hoursArray="appEmployee.availability['next']"
-        ></app-show-week-hours>
+        <div class="d-flex flex-row justify-left">
+          <app-show-week-hours
+            class="mt-2"
+            :showDays="false"
+            :hoursArray="appEmployee.availability['next']"
+          ></app-show-week-hours>
+        </div>
       </v-col>
     </v-row>
     <v-divider></v-divider>
@@ -73,7 +79,6 @@
         ></employee-current-project-table>
       </v-col>
     </v-row>
-
   </v-container>
 </template>
 
@@ -81,7 +86,7 @@
 import EmployeeCurrentProjectTable from "./EmployeeCurrentProjectTable.vue";
 import AppShowWeekHours from "../Common/AppShowWeekHours";
 
-import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js"
+import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js";
 
 export default {
   props: {

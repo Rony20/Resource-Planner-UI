@@ -2,42 +2,39 @@
   <div id="app">
     <v-app id="inspire">
       <v-card color="grey lighten-4" flat height="50px" tile>
-        <v-toolbar dense>
+        <v-toolbar dense dark flat color="grey darken-1">
           <v-toolbar-title>
-            <v-icon color="black" left>note</v-icon>Projects
+            <v-icon left>note</v-icon>Projects
           </v-toolbar-title>
 
           <v-spacer></v-spacer>
-
-          <v-card-actions>
-            <v-row>
-              <v-col cols="12" sm="6" md="6">
-                <v-select
-                  v-model="projects_type"
-                  :items="items"
-                  dense
-                  solo
-                  outlined
-                  single-line
-                  flat
-                  class="mt-6"
-                ></v-select>
-              </v-col>
-            </v-row>
+          <div id="my-select" class="d-flex flex-row mt-7">
+            <v-select
+              v-model="projects_type"
+              :items="items"
+              dense
+              solo
+              outlined
+              single-line
+              flat
+            ></v-select>
 
             <v-btn
-              class="ma-2"
+              class="ml-2"
               color="info"
               :loading="jira_loader"
               @click="syncWithJira"
             >
               <v-icon left>autorenew</v-icon>Sync Jira
             </v-btn>
-          </v-card-actions>
+          </div>
         </v-toolbar>
       </v-card>
 
-      <project-list ref="syncload" :projectType="projects_type"></project-list>
+      <project-list
+        ref="syncloadjira"
+        :projectType="projects_type"
+      ></project-list>
     </v-app>
   </div>
 </template>
@@ -71,7 +68,7 @@ export default {
               text: "Projects are synced with JIRA!",
               type: "info"
             });
-            this.$refs.syncload.loadProjects();
+            this.$refs.syncloadjira.loadProjects();
           }
         })
         .catch(error => {
@@ -90,4 +87,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+#my-select {
+  width: 300px;
+}
+</style>

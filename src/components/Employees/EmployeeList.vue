@@ -36,8 +36,8 @@
       loading-text="Loading Employees..."
       show-expand
       class="elevation-1"
-    >  
-      <template v-slot:item.current="{ item }"> 
+    >
+      <template v-slot:item.current="{ item }">
         <v-chip
           dark
           label
@@ -46,7 +46,7 @@
           :key="project.project"
           class="mr-2"
         >
-            {{ project.project }}
+          {{ project.project_id }}
         </v-chip>
       </template>
       <template v-slot:item.actions="{ item }">

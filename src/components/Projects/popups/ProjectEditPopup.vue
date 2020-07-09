@@ -49,7 +49,7 @@
               >
                 <template v-slot:activator="{ on }">
                   <v-text-field
-                    v-model="start_date"
+                    :value="formatedStartDate"
                     label="Start Date"
                     prepend-icon="event"
                     v-on="on"
@@ -72,7 +72,7 @@
               >
                 <template v-slot:activator="{ on }">
                   <v-text-field
-                    v-model="end_date"
+                    :value="formatedEndDate"
                     label="End Date"
                     prepend-icon="event"
                     readonly
@@ -103,6 +103,29 @@
                 clearable
                 counter
                 label="Skillsets"
+                hide-selected
+                hide-no-data
+                solo
+              ></v-autocomplete>
+            </v-col>
+            <v-col cols="12" sm="12">
+              <div class="caption">
+                <v-icon left>supervisor_account</v-icon>Allowed Users
+              </div>
+            </v-col>
+            <v-col cols="12" sm="12">
+              <v-autocomplete
+                v-model="allowed_users"
+                :items="appLeads"
+                item-text="value"
+                item-value="code"
+                chips
+                deletable-chips
+                small-chips
+                multiple
+                clearable
+                counter
+                label="Allowed Users"
                 hide-selected
                 hide-no-data
                 solo
@@ -161,7 +184,8 @@ export default {
       end_date_selector: false,
       skillsets: null,
       skills: null,
-      leads: null
+      leads: null,
+      allowed_users: null
     };
   },
 
@@ -169,9 +193,18 @@ export default {
     valueAssignment() {
       this.project_name = this.appProject.name;
       this.project_lead = this.appProject.lead;
-      this.start_date = this.appProject.start_date;
-      this.end_date = this.appProject.end_date;
+      this.start_date = this.appProject.start_date
+        ? this.$moment(this.appProject.start_date, "DD-MM-YYYY").format(
+            "YYYY-MM-DD"
+          )
+        : "";
+      this.end_date = this.appProject.end_date
+        ? this.$moment(this.appProject.end_date, "DD-MM-YYYY").format(
+            "YYYY-MM-DD"
+          )
+        : "";
       this.skillsets = this.appProject.skillsets;
+      this.allowed_users = this.appProject.allowed_users;
     },
 
     saveProjectDetails() {
@@ -183,10 +216,13 @@ export default {
           ? this.project_lead
           : this.appProject.lead,
         start_date: this.start_date
-          ? this.start_date
+          ? this.formatedStartDate
           : this.appProject.start_date,
-        end_date: this.end_date ? this.end_date : this.appProject.end_date,
-        skillset: this.skillsets
+        end_date: this.end_date
+          ? this.formatedEndDate
+          : this.appProject.end_date,
+        skillset: this.skillsets,
+        allowed_users: this.allowed_users
       };
       this.$editProjectDetailsPmo(this.appProject.key, edit_object)
         .then(() => {
@@ -198,13 +234,13 @@ export default {
           });
         })
         .catch(error => {
-          console.log(error)
+          console.log(error);
           this.$notify({
             title: "Error",
             text: `Error in updating "${this.appProject["name"]}" details !`,
             type: "error"
-          })
-          })
+          });
+        })
         .finally(() => {
           setTimeout(() => {
             this.$emit("refresh");
@@ -218,15 +254,25 @@ export default {
       return (
         this.appProject.name !== this.project_name ||
         this.appProject.lead !== this.project_lead ||
-        this.appProject.start_date !== this.start_date ||
-        this.appProject.end_date !== this.end_date ||
+        this.appProject.start_date !== this.formatedStartDate ||
+        this.appProject.end_date !== this.formatedEndDate ||
         JSON.stringify([...this.appProject.skillsets].sort()) !==
-          JSON.stringify([...this.skillsets].sort())
+          JSON.stringify([...this.skillsets].sort()) ||
+        JSON.stringify([...this.appProject.allowed_users].sort()) !==
+          JSON.stringify([...this.allowed_users].sort())
       );
     },
 
     appProject() {
       return this.$store.getters.getProjectByKey(this.projectKey);
+    },
+
+    formatedStartDate() {
+      return this.$moment(this.start_date, "YYYY-MM-DD").format("DD-MM-YYYY");
+    },
+
+    formatedEndDate() {
+      return this.$moment(this.end_date, "YYYY-MM-DD").format("DD-MM-YYYY");
     }
   },
 

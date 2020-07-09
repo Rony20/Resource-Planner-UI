@@ -2,9 +2,9 @@
   <div id="app">
     <v-app id="inspire">
       <v-card color="grey lighten-4" flat height="50px" tile>
-        <v-toolbar dense>
+        <v-toolbar dense dark flat color="grey darken-1">
           <v-toolbar-title>
-            <v-icon color="black" left>people_alt</v-icon>Employees
+            <v-icon left>people_alt</v-icon>Employees
           </v-toolbar-title>
 
           <v-spacer></v-spacer>
@@ -22,8 +22,7 @@
         </v-toolbar>
       </v-card>
 
-      <employee-list></employee-list>
-
+      <employee-list ref="syncloadhrms"></employee-list>
     </v-app>
   </div>
 </template>
@@ -41,8 +40,30 @@ export default {
     };
   },
   methods: {
-    syncWithHRMS(){
-
+    syncWithHRMS() {
+      this.hrms_loader = true;
+      this.$syncHRMS()
+        .then(response => {
+          if (response.data === "success") {
+            this.$notify({
+              title: "Information",
+              text: "Employees are synced with HRMS!",
+              type: "info"
+            });
+            this.$refs.syncloadhrms.loadEmployees();
+          }
+        })
+        .catch(error => {
+          this.$notify({
+            title: "Error",
+            text: "Error in sync with HRMS!",
+            type: "error"
+          });
+          console.error(error);
+        })
+        .finally(() => {
+          this.hrms_loader = false;
+        });
     }
   }
 };

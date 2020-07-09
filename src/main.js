@@ -3,29 +3,53 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
-import Notifications from 'vue-notification'
+import Notifications from "vue-notification";
 import "material-design-icons-iconfont/dist/material-design-icons.css";
 import axiosInstance from "./plugins/api.service";
+import axiosAuthInstance from "./plugins/api.service.auth"
+import Moment from "moment";
 
 Vue.config.productionTip = false;
-Vue.use(Notifications)
+Vue.use(Notifications);
 Vue.use(axiosInstance);
+Vue.use(axiosAuthInstance)
+
+Moment.locale("en");
+Object.defineProperty(Vue.prototype, "$moment", { value: Moment });
 
 Vue.filter("mapSkills", (value, skills) => {
-  return skills.find(skill => skill.code === value).value;
-})
+  let skill_obj = skills.find(skill => skill.code === value);
+  if (skill_obj === undefined) return "No Match";
+  else return skill_obj.value;
+});
 
 Vue.filter("mapLeads", (value, leads) => {
-  return leads.find(lead => lead.code === value).value;
-})
+  let lead_obj = leads.find(lead => lead.code === value);
+  if (lead_obj === undefined) return "No Match";
+  else return lead_obj.value;
+});
 
 Vue.filter("mapEmployees", (value, employees) => {
-  return employees.find(emp => emp.employee_id === value).employee_name;
-})
+  let employee_obj = employees.find(emp => emp.employee_id === value);
+  if (employee_obj === undefined) return "No Match";
+  else return employee_obj.employee_name;
+});
 
 Vue.filter("mapProjects", (value, projects) => {
-  return projects.find(project => project.key === value).name;
-})
+  let project_obj = projects.find(project => project.key === value);
+  if (project_obj === undefined) return "No Match";
+  else return project_obj.name;
+});
+
+Vue.filter("mapKeyWithPm", (value, projects) => {
+  let project_obj = projects.find(project => project.key === value);
+  if (project_obj === undefined) return "No Match";
+  else return project_obj.lead;
+});
+
+Vue.filter("formatDate", value => {
+  return value.format("MMM D, YYYY");
+});
 
 new Vue({
   router,
