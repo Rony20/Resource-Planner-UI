@@ -1,19 +1,26 @@
 <template>
   <v-app>
     <app-notification></app-notification>
-    <app-navbar id="navbar"></app-navbar>
-    <router-view></router-view>
+    <v-app v-if="!isAuthenticated">
+      <app-login></app-login>
+    </v-app>
+    <v-app v-else>
+      <app-navbar id="navbar"></app-navbar>
+      <router-view></router-view>
+    </v-app>
   </v-app>
 </template>
 
 <script>
 import AppNavbar from "./components/Navbar/Navbar.vue";
+import AppLogin from "./components/Login/Login.vue";
 import AppNotification from "./components/Common/AppNotification";
 export default {
   name: "App",
 
   components: {
     "app-navbar": AppNavbar,
+    "app-login": AppLogin,
     "app-notification": AppNotification
   },
 
@@ -55,6 +62,9 @@ export default {
   computed: {
     currentRoute() {
       return this.$route.name;
+    },
+    isAuthenticated() {
+      return this.$store.getters.getIsAuthenticated;
     }
   },
   watch: {
