@@ -1,4 +1,4 @@
-# resource_planner
+# team_planner
 
 ## Project setup
 ```
