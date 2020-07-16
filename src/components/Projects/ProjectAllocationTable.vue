@@ -5,22 +5,27 @@
         <thead>
           <tr>
             <th class="text-left">Name</th>
-            <th class="text-center">Currunt Allocation(Hrs)</th>
+            <th class="text-center">Current Allocation(Hrs)</th>
             <th class="text-center">Total Worked(Hrs)</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="employee in appProject.team" :key="employee.id">
-            <td>{{ employee.id | mapEmployees(appEmployees) }}</td>
+          <tr v-for="employee in appProject.developers" :key="employee">
+            <td>{{ employee }}</td>
             <td class="text-center">
-              <v-chip dark label small class="info">{{
-                getCurrentAllocation(employee.allocations)
-              }}</v-chip>
+              <v-chip dark label small class="info">Dev</v-chip>
             </td>
+          </tr>
+          <tr v-for="employee in appProject.qa" :key="employee">
+            <td>{{ employee }}</td>
             <td class="text-center">
-              <v-chip dark label small class="info">{{
-                getTotalHoursWorked(employee.allocations)
-              }}</v-chip>
+              <v-chip dark label small class="info"> QA </v-chip>
+            </td>
+          </tr>
+          <tr>
+            <td>{{ appProject.qalead }}</td>
+            <td class="text-center">
+              <v-chip dark label small class="info"> QA Lead </v-chip>
             </td>
           </tr>
         </tbody>

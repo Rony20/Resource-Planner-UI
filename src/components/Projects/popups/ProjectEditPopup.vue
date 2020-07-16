@@ -26,6 +26,7 @@
             label="Project Name"
             prepend-icon="note"
             v-model="project_name"
+            disabled
           ></v-text-field>
 
           <v-autocomplete
@@ -35,6 +36,7 @@
             item-value="code"
             label="Project Manager"
             prepend-icon="person"
+            disabled
           ></v-autocomplete>
 
           <v-row>
@@ -53,6 +55,7 @@
                     label="Start Date"
                     prepend-icon="event"
                     v-on="on"
+                    disabled
                   ></v-text-field>
                 </template>
                 <v-date-picker
@@ -108,12 +111,12 @@
                 solo
               ></v-autocomplete>
             </v-col>
-            <v-col cols="12" sm="12">
+            <v-col cols="12" sm="12" class="d-none">
               <div class="caption">
                 <v-icon left>supervisor_account</v-icon>Allowed Users
               </div>
             </v-col>
-            <v-col cols="12" sm="12">
+            <v-col cols="12" sm="12" class="d-none">
               <v-autocomplete
                 v-model="allowed_users"
                 :items="appLeads"
@@ -191,45 +194,34 @@ export default {
 
   methods: {
     valueAssignment() {
-      this.project_name = this.appProject.name;
+      this.project_name = this.appProject.epic_name;
       this.project_lead = this.appProject.lead;
       this.start_date = this.appProject.start_date
-        ? this.$moment(this.appProject.start_date, "DD-MM-YYYY").format(
+        ? this.$moment(this.appProject.start_date, "YYYY-MM-DD").format(
             "YYYY-MM-DD"
           )
         : "";
       this.end_date = this.appProject.end_date
-        ? this.$moment(this.appProject.end_date, "DD-MM-YYYY").format(
+        ? this.$moment(this.appProject.end_date, "YYYY-MM-DD").format(
             "YYYY-MM-DD"
           )
         : "";
       this.skillsets = this.appProject.skillsets;
-      this.allowed_users = this.appProject.allowed_users;
     },
 
     saveProjectDetails() {
       let edit_object = {
-        project_name: this.project_name
-          ? this.project_name
-          : this.appProject.name,
-        assigned_pm: this.project_lead
-          ? this.project_lead
-          : this.appProject.lead,
-        start_date: this.start_date
-          ? this.formatedStartDate
-          : this.appProject.start_date,
         end_date: this.end_date
           ? this.formatedEndDate
           : this.appProject.end_date,
-        skillset: this.skillsets,
-        allowed_users: this.allowed_users
+        skillset: this.skillsets
       };
-      this.$editProjectDetailsPmo(this.appProject.key, edit_object)
+      this.$editProjectDetailsPmo(this.appProject.epic_id, edit_object)
         .then(() => {
           this.valueAssignment();
           this.$notify({
             title: "Success",
-            text: `${this.appProject["name"]} project details are updated succesfully !`,
+            text: `${this.appProject["epic_name"]} project details are updated succesfully !`,
             type: "success"
           });
         })
@@ -237,7 +229,7 @@ export default {
           console.log(error);
           this.$notify({
             title: "Error",
-            text: `Error in updating "${this.appProject["name"]}" details !`,
+            text: `Error in updating "${this.appProject["epic_name"]}" details !`,
             type: "error"
           });
         })
@@ -257,9 +249,7 @@ export default {
         this.appProject.start_date !== this.formatedStartDate ||
         this.appProject.end_date !== this.formatedEndDate ||
         JSON.stringify([...this.appProject.skillsets].sort()) !==
-          JSON.stringify([...this.skillsets].sort()) ||
-        JSON.stringify([...this.appProject.allowed_users].sort()) !==
-          JSON.stringify([...this.allowed_users].sort())
+          JSON.stringify([...this.skillsets].sort())
       );
     },
 
@@ -268,11 +258,11 @@ export default {
     },
 
     formatedStartDate() {
-      return this.$moment(this.start_date, "YYYY-MM-DD").format("DD-MM-YYYY");
+      return this.$moment(this.start_date, "YYYY-MM-DD").format("YYYY-MM-DD");
     },
 
     formatedEndDate() {
-      return this.$moment(this.end_date, "YYYY-MM-DD").format("DD-MM-YYYY");
+      return this.$moment(this.end_date, "YYYY-MM-DD").format("YYYY-MM-DD");
     }
   },
 
