@@ -24,7 +24,7 @@ Vue.filter("mapSkills", (value, skills) => {
 });
 
 Vue.filter("mapLeads", (value, leads) => {
-  let lead_obj = leads.find(lead => lead.code === value);
+  let lead_obj = leads.find(lead => lead.code === parseInt(value));
   if (lead_obj === undefined) return "No Match";
   else return lead_obj.value;
 });
