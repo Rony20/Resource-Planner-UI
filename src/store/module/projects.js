@@ -8,11 +8,39 @@ const getters = {
   },
 
   getArchivedProjects: state => {
-    return state.projects.filter(project => project.status === "Archived");
+    return state.projects.filter(project => project.epic_type === "Archived");
   },
 
   getActiveProjects: state => {
-    return state.projects.filter(project => project.status === "Active");
+    return state.projects.filter(project => project.epic_type === "Active");
+  },
+
+  getOpenProjects: state => {
+    return state.projects.filter(project => project.epic_type === "Open");
+  },
+
+  getInProgressProjects: state => {
+    return state.projects.filter(project => project.epic_type === "In Progress");
+  },
+  
+  getClosedProjects: state => {
+    return state.projects.filter(project => project.epic_type === "Closed");
+  },
+
+  getReopenedProjects: state => {
+    return state.projects.filter(project => project.epic_type === "Reopened");
+  },
+
+  getApprovedProjects: state => {
+    return state.projects.filter(project => project.epic_type === "Approved");
+  },
+
+  getBdVerificationProjects: state => {
+    return state.projects.filter(project => project.epic_type === "BD Verification");
+  },
+
+  getResolvedProjects: state => {
+    return state.projects.filter(project => project.epic_type === "Resolved");
   },
 
   getProjectKeyList: state => {
@@ -52,7 +80,8 @@ const mutations = {
         customer_name: element["customer_name"],
         bd_estimated: element["bd_estimated"],
         pmo_estimated: element["pmo_estimated"],
-        logged_hours: element["logged_hours"]
+        logged_hours: element["logged_hours"],
+        epic_type: element["epic_type"]
       };
       state.projects.push(project_object);
     });

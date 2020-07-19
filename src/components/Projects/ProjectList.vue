@@ -134,8 +134,20 @@ export default {
       switch (this.projectType) {
         case "All":
           return this.$store.getters.getAllProjects;
-        case "Ongoing":
-          return this.$store.getters.getActiveProjects;
+        case "Open":
+          return this.$store.getters.getOpenProjects;
+        case "In Progress":
+          return this.$store.getters.getInProgressProjects; 
+        case "Closed":
+          return this.$store.getters.getClosedProjects;
+        case "Reopened":
+          return this.$store.getters.getReopenedProjects;
+        case "Approved":
+          return this.$store.getters.getApprovedProjects;
+        case "BD Verification":
+          return this.$store.getters.getBdVerificationProjects;
+        case "Resolved":
+          return this.$store.getters.getresolvedProjects; 
         case "Archived":
           return this.$store.getters.getArchivedProjects;
       }
