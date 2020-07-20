@@ -26,10 +26,86 @@
         </v-col>
       </v-row>
     </v-card-title>
+    <v-row justify="end" class="mr-5">
+      <v-menu
+        label="Columns"
+        max-width="350px"
+        v-model="menu"
+        :close-on-content-click="false"
+        offset-y
+        bottom
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            :color="menu ? 'secondary darken-2' : undefined"
+            v-bind="attrs"
+            v-on="on"
+            depressed
+            class="text-capitalize"
+          >
+            Columns
+            <v-icon>mdi-menu-down</v-icon>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-list>
+            <v-subheader>Columns</v-subheader>
+            <v-divider></v-divider>
+            <v-list-item>
+              <v-list-item-content>
+                <v-text-field
+                  v-model="searchfilters"
+                  append-icon="mdi-magnify"
+                  label="Search"
+                  single-line
+                  hide-details
+                  outlined
+                  class="compact-search"
+                  @click:clear="searchfilters = ''"
+                ></v-text-field>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+          <v-list max-height="250px" class="overflow-y-auto">
+            <v-list-item>
+              <v-btn
+                @click="headerValues=headers; columnsFilters();"
+                color="primary"
+                text
+                class="text-capitalize ml-n4 mt-n3"
+              >Restore Defaults</v-btn>
+            </v-list-item>
+            <v-list-item v-for="item in filteredItems" :key="item.text" class="mt-n3">
+              <v-list-item-action>
+                <v-checkbox
+                  v-model="headerValues"
+                  :label="item.text"
+                  :value="item"
+                  dense
+                  class="caption compact-checkbox"
+                  :readonly="item.text==='Epic Key' || item.text==='Actions'"
+                ></v-checkbox>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+          <v-divider></v-divider>
+          <v-card-actions class="mt-3">
+            <v-row justify="center">
+              <v-btn @click="columnsFilters" color="info" class="mr-3" small>
+                <v-icon left small>check</v-icon>Done
+              </v-btn>
+              <v-btn @click="menu=false" color="error" class="mr-3" small>
+                <v-icon left small>cancel</v-icon>Cancel
+              </v-btn>
+            </v-row>
+          </v-card-actions>
+        </v-card>
+      </v-menu>
+    </v-row>
     <v-data-table
-      :headers="headers"
+      :headers="selectedHeaders"
       :items="projects"
-      item-key="key"
+      item-key="epic_id"
       :search="search"
       :expanded.sync="expanded"
       :single-expand="single_expand"
@@ -38,24 +114,24 @@
       show-expand
       class="elevation-1"
     >
-      <template v-slot:item.lead="{ item }">{{
+      <template v-slot:item.lead="{ item }">
+        {{
         item.lead | mapLeads(appLeads)
-      }}</template>
+        }}
+      </template>
       <template v-slot:item.actions="{ item }">
         <div class="d-flex justify-space-around">
-          <project-edit-popup
-            :projectKey="item.key"
-            @refresh="loadProjects"
-          ></project-edit-popup>
-          <project-team-popup
-            :projectKey="item.key"
-            @refresh="loadProjects"
-          ></project-team-popup>
+          <project-edit-popup :projectKey="item.epic_id" @refresh="loadProjects"></project-edit-popup>
+          <project-team-popup :projectKey="item.epic_id" @refresh="loadProjects"></project-team-popup>
         </div>
       </template>
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">
-          <project-expand-detail :projectKey="item.key"></project-expand-detail>
+          <project-expand-detail
+            :projectKey="item.epic_id"
+            :selectedHeaders="selectedHeaders"
+            :mainHeaders="mainHeaders"
+          ></project-expand-detail>
         </td>
       </template>
     </v-data-table>
@@ -85,6 +161,11 @@ export default {
   data() {
     return {
       search: "",
+      searchfilters: "",
+      menu: false,
+      headerValues: [],
+      mainHeaders: [],
+      selectedHeaders: [],
       dialog: false,
       project_loader: true,
       single_expand: true,
@@ -92,12 +173,16 @@ export default {
       expanded: [],
       headers: [
         {
-          text: "Key",
+          text: "Epic Key",
           align: "start",
-          value: "key"
+          value: "epic_id"
         },
+        { text: "Epic Name", value: "epic_name" },
         { text: "Project Name", value: "name" },
         { text: "Project Lead", value: "lead" },
+        { text: "Start Date", value: "start_date" },
+        { text: "End Date", value: "end_date" },
+        { text: "Status", value: "status" },
         {
           text: "Actions",
           value: "actions",
@@ -121,6 +206,10 @@ export default {
         .finally(() => {
           this.project_loader = false;
         });
+    },
+    columnsFilters() {
+      this.menu = false;
+      this.selectedHeaders = this.headerValues;
     }
   },
 
@@ -135,22 +224,49 @@ export default {
         case "Archived":
           return this.$store.getters.getArchivedProjects;
       }
+    },
+    filteredItems() {
+      return this.headers.filter(item => {
+        if (!this.searchfilters) return this.headers;
+        return item.text
+          .toLowerCase()
+          .includes(this.searchfilters.toLowerCase());
+      });
     }
   },
-
+  watch: {
+    menu(val) {
+      if (val == true) {
+        this.headerValues = this.selectedHeaders;
+      }
+    }
+  },
   created() {
     this.loadProjects();
+    this.headerValues = this.headers;
+    this.selectedHeaders = this.headers;
+    this.mainHeaders = this.headers;
   }
 };
 </script>
 
 <style scoped>
 .project-card {
-  margin: 30px 100px;
+  margin: 30px 20px;
 }
 .custom-loader {
   animation: loader 1s infinite;
   display: flex;
+}
+.compact-checkbox {
+  transform: scale(0.875);
+  transform-origin: left;
+}
+.compact-search {
+  transform: scale(0.775);
+  transform-origin: left;
+  height: 35px;
+  width: 250px;
 }
 @-moz-keyframes loader {
   from {
