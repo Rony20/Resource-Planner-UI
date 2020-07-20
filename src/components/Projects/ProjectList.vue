@@ -252,7 +252,7 @@ export default {
 
 <style scoped>
 .project-card {
-  margin: 30px 20px;
+  margin: 30px 100px;
 }
 .custom-loader {
   animation: loader 1s infinite;
