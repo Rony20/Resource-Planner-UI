@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       projects_type: "All",
-      items: ["All", "Ongoing", "Archived"]
+      items: ["All", "Open", "In Progress", "Reopened", "Approved", "Resolved", "BD Verification", "Closed", "Archived"]
     };
   }
 };

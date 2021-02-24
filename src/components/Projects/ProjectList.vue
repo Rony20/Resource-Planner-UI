@@ -29,7 +29,7 @@
     <v-data-table
       :headers="headers"
       :items="projects"
-      item-key="key"
+      item-key="epic_id"
       :search="search"
       :expanded.sync="expanded"
       :single-expand="single_expand"
@@ -44,18 +44,18 @@
       <template v-slot:item.actions="{ item }">
         <div class="d-flex justify-space-around">
           <project-edit-popup
-            :projectKey="item.key"
+            :projectKey="item.epic_id"
             @refresh="loadProjects"
           ></project-edit-popup>
           <project-team-popup
-            :projectKey="item.key"
+            :projectKey="item.epic_id"
             @refresh="loadProjects"
           ></project-team-popup>
         </div>
       </template>
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">
-          <project-expand-detail :projectKey="item.key"></project-expand-detail>
+          <project-expand-detail :projectKey="item.epic_id"></project-expand-detail>
         </td>
       </template>
     </v-data-table>
@@ -92,12 +92,16 @@ export default {
       expanded: [],
       headers: [
         {
-          text: "Key",
+          text: "Epic Key",
           align: "start",
-          value: "key"
+          value: "epic_id"
         },
+        { text: "Epic Name", value: "epic_name" },
         { text: "Project Name", value: "name" },
         { text: "Project Lead", value: "lead" },
+        { text: "Start Date", value: "start_date"},
+        { text: "End Date", value: "end_date"},
+        { text: "Status", value: "status"},
         {
           text: "Actions",
           value: "actions",
@@ -130,8 +134,20 @@ export default {
       switch (this.projectType) {
         case "All":
           return this.$store.getters.getAllProjects;
-        case "Ongoing":
-          return this.$store.getters.getActiveProjects;
+        case "Open":
+          return this.$store.getters.getOpenProjects;
+        case "In Progress":
+          return this.$store.getters.getInProgressProjects; 
+        case "Closed":
+          return this.$store.getters.getClosedProjects;
+        case "Reopened":
+          return this.$store.getters.getReopenedProjects;
+        case "Approved":
+          return this.$store.getters.getApprovedProjects;
+        case "BD Verification":
+          return this.$store.getters.getBdVerificationProjects;
+        case "Resolved":
+          return this.$store.getters.getresolvedProjects; 
         case "Archived":
           return this.$store.getters.getArchivedProjects;
       }
@@ -146,7 +162,7 @@ export default {
 
 <style scoped>
 .project-card {
-  margin: 30px 100px;
+  margin: 30px 20px;
 }
 .custom-loader {
   animation: loader 1s infinite;
