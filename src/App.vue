@@ -59,7 +59,7 @@ export default {
   },
   watch: {
     $route(to) {
-      document.title = to.meta.title || "Resource Planner";
+      document.title = to.meta.title || "Team Planner";
     }
   },
 
@@ -69,7 +69,7 @@ export default {
         this.loadDropdowns();
         this.loadEmployees();
         break;
-      case "Employees":
+      case "Team":
         this.loadDropdowns();
         this.loadProjects();
         break;

@@ -2,7 +2,7 @@
   <v-app>
     <v-app-bar dark app dense id="navigationbar">
       <v-icon left @click="refresh()">how_to_reg</v-icon>
-      <v-toolbar-title>Resource Planner</v-toolbar-title>
+      <v-toolbar-title>Team Planner</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn
         v-for="link in links"
@@ -52,7 +52,7 @@ export default {
         case "PM":
           return [
             { text: "Projects", route: "/projects" },
-            { text: "Employees", route: "/employees" },
+            { text: "Team", route: "/team" },
             { text: "Requests", route: "/requests" },
             { text: "Allocations", route: "/allocations" }
           ];
@@ -60,9 +60,10 @@ export default {
         case "PMO":
           return [
             { text: "Projects", route: "/projects" },
-            { text: "Employees", route: "/employees" },
+            { text: "Team", route: "/team" },
             { text: "Requests", route: "/requests" },
-            { text: "Reports", route: "/reports" }
+            { text: "Reports", route: "/reports" },
+            { text: "Settings", route: "/settings" }
           ];
 
         // For any other role
