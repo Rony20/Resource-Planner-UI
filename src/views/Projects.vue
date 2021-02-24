@@ -18,23 +18,11 @@
               single-line
               flat
             ></v-select>
-
-            <v-btn
-              class="ml-2"
-              color="info"
-              :loading="jira_loader"
-              @click="syncWithJira"
-            >
-              <v-icon left>autorenew</v-icon>Sync Jira
-            </v-btn>
           </div>
         </v-toolbar>
       </v-card>
 
-      <project-list
-        ref="syncloadjira"
-        :projectType="projects_type"
-      ></project-list>
+      <project-list :projectType="projects_type"></project-list>
     </v-app>
   </div>
 </template>
@@ -51,44 +39,15 @@ export default {
 
   data() {
     return {
-      jira_loader: false,
       projects_type: "All",
       items: ["All", "Open", "In Progress", "Reopened", "Approved", "Resolved", "BD Verification", "Closed", "Archived"]
     };
-  },
-
-  methods: {
-    syncWithJira() {
-      this.jira_loader = true;
-      this.$syncJira()
-        .then(response => {
-          if (response.data === "success") {
-            this.$notify({
-              title: "Information",
-              text: "Projects are synced with JIRA!",
-              type: "info"
-            });
-            this.$refs.syncloadjira.loadProjects();
-          }
-        })
-        .catch(error => {
-          this.$notify({
-            title: "Error",
-            text: "Error in sync with JIRA!",
-            type: "error"
-          });
-          console.error(error);
-        })
-        .finally(() => {
-          this.jira_loader = false;
-        });
-    }
   }
 };
 </script>
 
 <style scoped>
 #my-select {
-  width: 300px;
+  width: 200px;
 }
 </style>
