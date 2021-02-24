@@ -24,8 +24,7 @@
             class="mr-2 mt-2"
             v-for="code in appProject.skillsets"
             :key="code"
-            >{{ code | mapSkills(appSkills) }}</v-chip
-          >
+          >{{ code | mapSkills(appSkills) }}</v-chip>
         </div>
       </v-col>
       <v-col cols="8" sm="4" md="4">
@@ -55,14 +54,13 @@
     </v-row>
   </v-container>
 </template>
-
 <script>
 import ProjectAllocationTable from "./ProjectAllocationTable";
 
 import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js";
 
 export default {
-  props: { projectKey: String },
+  props: { projectKey: String, selectedHeaders: Array, mainHeaders: Array },
 
   components: {
     "project-allocation-table": ProjectAllocationTable
@@ -71,14 +69,64 @@ export default {
   mixins: [storeDataPropertiesMixin],
 
   data() {
-    return {};
+    return {
+      available: true,
+      projectName: false,
+      projectLead: false,
+      startDate: false,
+      endDate: false,
+      status: false,
+      epicName: false
+    };
   },
+  methods: {
+    addUnselectedColumns() {
+      this.projectName = false;
+      this.projectLead = false;
+      this.startDate = false;
+      this.endDate = false;
+      this.status = false;
+      this.epicName = false;
 
+      for (let item of this.mainHeaders) {
+        this.available = false;
+        for (let selecteditem of this.selectedHeaders) {
+          if (item.text == selecteditem.text) {
+            this.available = true;
+            break;
+          }
+        }
+        if (!this.available) {
+          if (item.text == "Project Name") {
+            this.projectName = true;
+          } else if (item.text == "Project Lead") {
+            this.projectLead = true;
+          } else if (item.text == "Start Date") {
+            this.startDate = true;
+          } else if (item.text == "End Date") {
+            this.endDate = true;
+          } else if (item.text == "Status") {
+            this.status = true;
+          } else if (item.text == "Epic Name") {
+            this.epicName = true;
+          }
+        }
+      }
+    }
+  },
   computed: {
     // eslint-disable-next-line vue/return-in-computed-property
     appProject() {
       return this.$store.getters.getProjectByKey(this.projectKey);
     }
+  },
+  watch: {
+    selectedHeaders() {
+      this.addUnselectedColumns();
+    }
+  },
+  created() {
+    this.addUnselectedColumns();
   }
 };
 </script>
