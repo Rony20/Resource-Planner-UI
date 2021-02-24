@@ -8,11 +8,11 @@ import Reports from "../components/Reports/reports.vue";
 Vue.use(VueRouter);
 
 const routes = [
-  {
-    path: "/",
-    redirect: "/projects",
-    name: "Projects"
-  },
+  // {
+  //   path: "/",
+  //   redirect: "/projects",
+  //   name: "Projects"
+  // },
   {
     path: "/projects",
     name: "Projects",
@@ -52,6 +52,11 @@ const routes = [
     meta: {
       title: "Reports"
     }
+  },
+  {
+    path: "*",
+    redirect: "/projects",
+    name: "Projects"
   }
 ];
 

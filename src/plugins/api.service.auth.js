@@ -15,6 +15,12 @@ const plugin = {
         }
       });
     };
+    Vue.prototype.$checkToken = function(token) {
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+      };
+      return axiosAuthInstance.get("get-login-user", config);
+    };
   }
 };
 

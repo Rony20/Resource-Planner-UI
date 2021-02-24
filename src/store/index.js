@@ -4,6 +4,7 @@ import Vuex from "vuex";
 import ProjectsData from "./module/projects.js";
 import EmployeesData from "./module/employees.js";
 import DropdownsData from "./module/dropdowns.js";
+import LoginData from "./module/login.js";
 
 Vue.use(Vuex);
 
@@ -16,6 +17,7 @@ export default new Vuex.Store({
   modules: {
     ProjectsData,
     EmployeesData,
-    DropdownsData
+    DropdownsData,
+    LoginData
   }
 });
