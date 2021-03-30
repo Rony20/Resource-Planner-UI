@@ -429,6 +429,7 @@ export default {
         });
       } else {
         this.disability_control = true;
+        console.log(this.selected);
         await this.selected.forEach(async emp => {
           let request_obj = {
             request_id: `${emp.project_id}-${
@@ -445,7 +446,10 @@ export default {
             requested_hours: emp.requested_hours,
             request_date: this.today.format("DD-MM-YYYY")
           };
-          await this.$saveRequest(request_obj);
+          // this.$saveRequest(request_obj)
+          //   .then()
+          //   .catch(error => console.log(error));
+          await this.$saveRequest(request_obj)
         });
         this.$notify({
           title: "Success",

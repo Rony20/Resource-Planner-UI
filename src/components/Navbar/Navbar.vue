@@ -71,6 +71,7 @@ export default {
       this.$router.replace("/");
     },
     logout() {
+      // console.log("Logout");
       this.$store.commit("logoutUser");
       this.$notify({
         title: "Success",
@@ -101,6 +102,7 @@ export default {
             { text: "Settings", route: "/settings" }
           ];
 
+        // For any other role
         default:
           return [{ text: "Allocations", route: "/allocations" }];
       }

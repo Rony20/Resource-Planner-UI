@@ -8,6 +8,11 @@ import Reports from "../components/Reports/reports.vue";
 Vue.use(VueRouter);
 
 const routes = [
+  // {
+  //   path: "/",
+  //   redirect: "/projects",
+  //   name: "Projects"
+  // },
   {
     path: "/projects",
     name: "Projects",

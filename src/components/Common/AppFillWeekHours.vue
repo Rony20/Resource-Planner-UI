@@ -147,6 +147,7 @@ export default {
   },
 
   computed: {
+    // eslint-disable-next-line vue/return-in-computed-property
     combined() {
       if (this.autofill && this.weekend) return 0;
       else if (this.autofill && !this.weekend) return 1;

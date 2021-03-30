@@ -133,10 +133,12 @@ export default {
         .then(response => {
           this.$store.commit("setAuthenticated", response.data);
           this.loading = false;
+          // this.$router.push({ name: "Projects" });
         })
         .catch(() => {
           this.invalidCred = true;
           this.loading = false;
+          // console.log(err);
         });
     }
   }
