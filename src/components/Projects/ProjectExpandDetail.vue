@@ -115,7 +115,6 @@ export default {
     }
   },
   computed: {
-    // eslint-disable-next-line vue/return-in-computed-property
     appProject() {
       return this.$store.getters.getProjectByKey(this.projectKey);
     }

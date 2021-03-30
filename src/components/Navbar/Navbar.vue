@@ -71,7 +71,6 @@ export default {
       this.$router.replace("/");
     },
     logout() {
-      // console.log("Logout");
       this.$store.commit("logoutUser");
       this.$notify({
         title: "Success",

@@ -92,7 +92,6 @@ export default {
       ${filters.formatDate(this.week_end)}`;
     },
 
-    // eslint-disable-next-line vue/return-in-computed-property
     currentProperties() {
       if (this.current_component === "request-list-show") {
         return {
