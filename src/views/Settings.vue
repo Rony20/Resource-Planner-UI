@@ -151,7 +151,6 @@ export default {
               this.settingsSyncList[1].loading = false;
             });
           break;
-        default:
       }
     }
   }
