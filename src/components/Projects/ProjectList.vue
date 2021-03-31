@@ -17,11 +17,11 @@
             filled
             solo
           >
-            <v-icon size="20" slot="append" left>keyboard_arrow_down</v-icon>
+          <v-icon size="20" slot="append" left>keyboard_arrow_down</v-icon>
             <template v-slot:selection="{ item, index }">
               <span v-if="index === 0">{{ item.text | maximumLength }}</span>
               <span v-if="index === 1"> , ...</span>
-            </template>
+            </template> 
           </v-autocomplete>
         </v-col>
 
@@ -101,15 +101,16 @@
                     class="text-capitalize ml-n4 mt-n3"
                   >Restore Defaults</v-btn>
                 </v-list-item>
-                <v-list-item v-for="item in filteredItems" :key="item.text" class="mt-n3">
+                <v-list-item v-for="(item,index) in filteredItems" :key="item.text" class="mt-n3">
                   <v-list-item-action>
                     <v-checkbox
-                      v-model="headerValues"
+                      v-model="headerValues[index].selected"
                       :label="item.text"
                       :value="item"
                       dense
                       class="caption compact-checkbox"
-                      :readonly="item.text==='Epic Key' || item.text==='Actions'"
+                      v-bind:false-value="0"
+                      v-bind:true-value="1"
                     ></v-checkbox>
                   </v-list-item-action>
                 </v-list-item>
@@ -249,9 +250,9 @@
         :single-expand="single_expand"
         :loading="project_loader"
         loading-text="Loading Projects..."
-        show-expand
+        
         class="elevation-1"
-      >
+      > 
         <template v-slot:item.lead="{ item }">{{
           item.lead | mapLeads(appLeads)
         }}</template>
@@ -267,7 +268,7 @@
             ></project-team-popup>
           </div>
         </template>
-        <template v-slot:expanded-item="{ headers, item }">
+       <!-- <template v-slot:expanded-item="{ headers, item }">
           <td :colspan="headers.length">
             <project-expand-detail
               :projectKey="item.epic_id"
@@ -275,7 +276,7 @@
               :mainHeaders="mainHeaders"
             ></project-expand-detail>
           </td>
-        </template>
+        </template> -->
       </v-data-table>
     </v-card>
   </v-app>
@@ -284,7 +285,7 @@
 <script>
 import ProjectEditPopup from "./popups/ProjectEditPopup";
 import ProjectTeamPopup from "./popups/ProjectTeamPopup";
-import ProjectExpandDetail from "./ProjectExpandDetail";
+//import ProjectExpandDetail from "./ProjectExpandDetail";
 
 import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js";
 
@@ -294,7 +295,7 @@ export default {
   components: {
     "project-edit-popup": ProjectEditPopup,
     "project-team-popup": ProjectTeamPopup,
-    "project-expand-detail": ProjectExpandDetail
+   // "project-expand-detail": ProjectExpandDetail
   },
 
   props: ["projectType"],
@@ -363,20 +364,34 @@ export default {
         {
           text: "Epic Key",
           align: "start",
-          value: "epic_id"
+          value: "epic_id",
+          selected: 1
         },
-        { text: "Epic Name", value: "epic_name" },
-        { text: "Project Name", value: "name" },
-        { text: "Project Lead", value: "lead" },
-        { text: "Start Date", value: "start_date"},
-        { text: "End Date", value: "end_date"},
-        { text: "Status", value: "status"},
+        { text: "Epic Name", value: "epic_name", selected: 1},
+        { text: "Project Name", value: "name", selected: 1},
+        {text: "Business Unit", value: "business_unit", selected: 1},
+        { text: "Project Lead", value: "lead", selected: 1},
+        { text: "PMO Start Date", value: "start_date", selected: 1},
+        { text: "PMO End Date", value: "end_date", selected: 1},
+        { text: "Status", value: "status", selected: 1},
         {
           text: "Actions",
           value: "actions",
           sortable: false,
-          align: "center"
-        }
+          align: "center", 
+          selected: 1
+        },
+        {text: "Customer Name", value: "customer_name", selected: 0},
+        {text: "Description", value: "description", selected: 0},
+        {text: "Logged Hours", value: "logged_hours", selected: 0},
+        {text: "PMO Estimated Hours", value: "pmo_estimated", selected: 0},
+        {text: "BD Estimated Hours", value: "bd_estimated", selected: 0},
+        
+        {text: "CMR Order Number", value: "cmr_order_number", selected: 0},
+        {text: "BD Dev Start Date", value: "bd_dev_start_date",selected: 0},
+        {text: "BD Dev End Date", value: "bd_dev_end_date",selected: 0},
+        {text: "BD Supported Estimated Hours", value: "bd_supported_estimated_hours", selected: 0}
+
       ]
     };
   },
@@ -421,7 +436,8 @@ export default {
     },
     columnsFilters() {
       this.menu = false;
-      this.selectedHeaders = this.headerValues;
+      this.selectedHeaders = this.headerValues.filter(item=>item.selected==1);
+      
     }
   },
 
@@ -524,15 +540,16 @@ export default {
     },
     menu(val) {
       if (val == true) {
-        this.headerValues = this.selectedHeaders;
+        this.headerValues = this.headers;
       }
     }
   },
   created() {
     this.loadProjects();
     this.headerValues = this.headers;
-    this.selectedHeaders = this.headers;
+    this.selectedHeaders = this.headers.filter(item=>item.selected==1);
     this.mainHeaders = this.headers;
+    console.log(this.headers)
   }
 };
 </script>
@@ -622,3 +639,4 @@ export default {
   }
 }
 </style>
+

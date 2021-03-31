@@ -81,7 +81,12 @@ const mutations = {
         bd_estimated: element["bd_estimated"],
         pmo_estimated: element["pmo_estimated"],
         logged_hours: element["logged_hours"],
-        epic_type: element["epic_type"]
+        epic_type: element["epic_type"],
+        business_unit: element["business_unit"],
+        cmr_order_number: element["cmr_order_number"],
+        bd_dev_start_date: element["bd_dev_start_date"],
+        bd_dev_end_date: element["bd_dev_end_date"],
+        bd_supported_estimated_hours: element["bd_supported_estimated_hours"]
       };
       state.projects.push(project_object);
     });
