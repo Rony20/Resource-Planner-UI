@@ -3,7 +3,13 @@
   <v-app>
     <v-card elevation="0" class="project-card1">
       <v-row>
-        <v-col cols="10" sm="2" v-for="(filterBar, index) in mandatoryObj" :key="index" class="mr-n12">
+        <v-col
+          cols="10"
+          sm="2"
+          v-for="(filterBar, index) in mandatoryObj"
+          :key="index"
+          class="mr-n12"
+        >
           <v-autocomplete
             flat
             small
@@ -17,11 +23,11 @@
             filled
             solo
           >
-          <v-icon size="20" slot="append" left>keyboard_arrow_down</v-icon>
+            <v-icon size="20" slot="append" left>keyboard_arrow_down</v-icon>
             <template v-slot:selection="{ item, index }">
               <span v-if="index === 0">{{ item.text | maximumLength }}</span>
               <span v-if="index === 1"> , ...</span>
-            </template> 
+            </template>
           </v-autocomplete>
         </v-col>
 
@@ -31,7 +37,14 @@
               <v-btn depressed v-on="on" color="white" right dense filled solo>
                 More
                 <v-icon right size="20">keyboard_arrow_down</v-icon>
-                <v-icon size="20" right class="ml-2" v-if="filterSelected.length > 0" @click.native.stop @click.prevent="clearFilters">
+                <v-icon
+                  size="20"
+                  right
+                  class="ml-2"
+                  v-if="filterSelected.length > 0"
+                  @click.native.stop
+                  @click.prevent="clearFilters"
+                >
                   mdi-close-circle
                 </v-icon>
               </v-btn>
@@ -40,8 +53,13 @@
               <template v-slot:activator="{ on }">
                 <v-list v-on="on">
                   <v-list-item v-for="(obj, index) in dropdownObj" :key="index">
-                    <v-checkbox multiple v-model="filterSelected"
-                      :label="obj.text" :value="obj" dense class="my-md-n2"
+                    <v-checkbox
+                      multiple
+                      v-model="filterSelected"
+                      :label="obj.text"
+                      :value="obj"
+                      dense
+                      class="my-md-n2"
                     ></v-checkbox>
                   </v-list-item>
                 </v-list>
@@ -95,13 +113,21 @@
               <v-list max-height="250px" class="overflow-y-auto">
                 <v-list-item>
                   <v-btn
-                    @click="headerValues=headers; columnsFilters();"
+                    @click="
+                      headerValues = headers;
+                      columnsFilters();
+                    "
                     color="primary"
                     text
                     class="text-capitalize ml-n4 mt-n3"
-                  >Restore Defaults</v-btn>
+                    >Restore Defaults</v-btn
+                  >
                 </v-list-item>
-                <v-list-item v-for="(item,index) in filteredItems" :key="item.text" class="mt-n3">
+                <v-list-item
+                  v-for="(item, index) in filteredItems"
+                  :key="item.text"
+                  class="mt-n3"
+                >
                   <v-list-item-action>
                     <v-checkbox
                       v-model="headerValues[index].selected"
@@ -118,10 +144,15 @@
               <v-divider></v-divider>
               <v-card-actions class="mt-3">
                 <v-row justify="center">
-                  <v-btn @click="columnsFilters" color="info" class="mr-3" small>
+                  <v-btn
+                    @click="columnsFilters"
+                    color="info"
+                    class="mr-3"
+                    small
+                  >
                     <v-icon left small>check</v-icon>Done
                   </v-btn>
-                  <v-btn @click="menu=false" color="error" class="mr-3" small>
+                  <v-btn @click="menu = false" color="error" class="mr-3" small>
                     <v-icon left small>cancel</v-icon>Cancel
                   </v-btn>
                 </v-row>
@@ -131,7 +162,13 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="10" sm="2" v-for="(filterBar, index) in filterSelected1" :key="index" class="mr-n12 mt-md-n12 mb-md-n8">
+        <v-col
+          cols="10"
+          sm="2"
+          v-for="(filterBar, index) in filterSelected1"
+          :key="index"
+          class="mr-n12 mt-md-n12 mb-md-n8"
+        >
           <v-autocomplete
             flat
             small
@@ -147,7 +184,12 @@
             solo
           >
             <v-icon size="20" slot="append" left>keyboard_arrow_down</v-icon>
-            <v-icon size="20" slot="append" @click="deleteFilter(filterBar.value)">mdi-close-circle</v-icon>
+            <v-icon
+              size="20"
+              slot="append"
+              @click="deleteFilter(filterBar.value)"
+              >mdi-close-circle</v-icon
+            >
             <template v-slot:selection="{ item, index }">
               <span v-if="index === 0">{{ item.text | maximumLength }}</span>
               <span v-if="index === 1"> , ...</span>
@@ -155,7 +197,12 @@
           </v-autocomplete>
         </v-col>
 
-        <v-col cols="10" sm="2" v-if="filterSelected2.some(date => date.value === 'start_date')" class="mr-n12 mt-md-n12 mb-md-n8">
+        <v-col
+          cols="10"
+          sm="2"
+          v-if="filterSelected2.some(date => date.value === 'start_date')"
+          class="mr-n12 mt-md-n12 mb-md-n8"
+        >
           <v-menu
             v-model="start_date_selector"
             :close-on-content-click="false"
@@ -176,15 +223,30 @@
                 small
                 v-on="on"
               >
-                <v-icon size="20" slot="append" left>keyboard_arrow_down</v-icon>
-                <v-icon size="20" slot="append" @click="deleteFilter('start_date')">mdi-close-circle</v-icon>
+                <v-icon size="20" slot="append" left
+                  >keyboard_arrow_down</v-icon
+                >
+                <v-icon
+                  size="20"
+                  slot="append"
+                  @click="deleteFilter('start_date')"
+                  >mdi-close-circle</v-icon
+                >
               </v-text-field>
             </template>
-            <v-date-picker v-model="filters.start_date" @input="start_date_selector = false"></v-date-picker>
+            <v-date-picker
+              v-model="filters.start_date"
+              @input="start_date_selector = false"
+            ></v-date-picker>
           </v-menu>
         </v-col>
 
-        <v-col cols="10" sm="2" v-if="filterSelected2.some(date => date.value === 'end_date')" class="mr-n12 mt-md-n12 mb-md-n8">
+        <v-col
+          cols="10"
+          sm="2"
+          v-if="filterSelected2.some(date => date.value === 'end_date')"
+          class="mr-n12 mt-md-n12 mb-md-n8"
+        >
           <v-menu
             v-model="end_date_selector"
             :close-on-content-click="false"
@@ -205,11 +267,21 @@
                 small
                 v-on="on"
               >
-                <v-icon size="20" slot="append" left>keyboard_arrow_down</v-icon>
-                <v-icon size="20" slot="append" @click="deleteFilter('end_date')">mdi-close-circle</v-icon>
+                <v-icon size="20" slot="append" left
+                  >keyboard_arrow_down</v-icon
+                >
+                <v-icon
+                  size="20"
+                  slot="append"
+                  @click="deleteFilter('end_date')"
+                  >mdi-close-circle</v-icon
+                >
               </v-text-field>
             </template>
-            <v-date-picker v-model="filters.end_date" @input="end_date_selector = false"></v-date-picker>
+            <v-date-picker
+              v-model="filters.end_date"
+              @input="end_date_selector = false"
+            ></v-date-picker>
           </v-menu>
         </v-col>
       </v-row>
@@ -354,31 +426,34 @@ export default {
           value: "epic_id",
           selected: 1
         },
-        { text: "Epic Name", value: "epic_name", selected: 1},
-        { text: "Project Name", value: "name", selected: 1},
-        { text: "Business Unit", value: "business_unit", selected: 1},
-        { text: "Project Lead", value: "lead", selected: 1},
-        { text: "PMO Start Date", value: "start_date", selected: 1},
-        { text: "PMO End Date", value: "end_date", selected: 1},
-        { text: "Status", value: "status", selected: 1},
+        { text: "Epic Name", value: "epic_name", selected: 1 },
+        { text: "Project Name", value: "name", selected: 1 },
+        { text: "Business Unit", value: "business_unit", selected: 1 },
+        { text: "Project Lead", value: "lead", selected: 1 },
+        { text: "PMO Start Date", value: "start_date", selected: 1 },
+        { text: "PMO End Date", value: "end_date", selected: 1 },
+        { text: "Status", value: "status", selected: 1 },
         {
           text: "Actions",
           value: "actions",
           sortable: false,
-          align: "center", 
+          align: "center",
           selected: 1
         },
-        {text: "Customer Name", value: "customer_name", selected: 0},
-        {text: "Description", value: "description", selected: 0},
-        {text: "Logged Hours", value: "logged_hours", selected: 0},
-        {text: "PMO Estimated Hours", value: "pmo_estimated", selected: 0},
-        {text: "BD Estimated Hours", value: "bd_estimated", selected: 0},
-        
-        {text: "CMR Order Number", value: "cmr_order_number", selected: 0},
-        {text: "BD Dev Start Date", value: "bd_dev_start_date",selected: 0},
-        {text: "BD Dev End Date", value: "bd_dev_end_date",selected: 0},
-        {text: "BD Supported Estimated Hours", value: "bd_supported_estimated_hours", selected: 0}
+        { text: "Customer Name", value: "customer_name", selected: 0 },
+        { text: "Description", value: "description", selected: 0 },
+        { text: "Logged Hours", value: "logged_hours", selected: 0 },
+        { text: "PMO Estimated Hours", value: "pmo_estimated", selected: 0 },
+        { text: "BD Estimated Hours", value: "bd_estimated", selected: 0 },
 
+        { text: "CMR Order Number", value: "cmr_order_number", selected: 0 },
+        { text: "BD Dev Start Date", value: "bd_dev_start_date", selected: 0 },
+        { text: "BD Dev End Date", value: "bd_dev_end_date", selected: 0 },
+        {
+          text: "BD Supported Estimated Hours",
+          value: "bd_supported_estimated_hours",
+          selected: 0
+        }
       ]
     };
   },
@@ -401,7 +476,9 @@ export default {
         });
     },
     deleteFilter(value) {
-      const index = this.filterSelected.findIndex(filter => filter.value === value);
+      const index = this.filterSelected.findIndex(
+        filter => filter.value === value
+      );
       if (index >= 0) this.filterSelected.splice(index, 1);
       this.filters[value] = "";
     },
@@ -436,7 +513,7 @@ export default {
         case "Open":
           return this.$store.getters.getOpenProjects;
         case "In Progress":
-          return this.$store.getters.getInProgressProjects; 
+          return this.$store.getters.getInProgressProjects;
         case "Closed":
           return this.$store.getters.getClosedProjects;
         case "Reopened":
@@ -446,7 +523,7 @@ export default {
         case "BD Verification":
           return this.$store.getters.getBdVerificationProjects;
         case "Resolved":
-          return this.$store.getters.getresolvedProjects; 
+          return this.$store.getters.getresolvedProjects;
         case "Archived":
           return this.$store.getters.getArchivedProjects;
       }
@@ -456,26 +533,36 @@ export default {
         return Object.keys(this.filters).every(filter => {
           if (filter === "start_date" && this.filters[filter].length > 0) {
             let filter_date = this.$moment(
-              this.$moment(this.filters[filter], "YYYY-MM-DD").format("DD-MM-YYYY"),
+              this.$moment(this.filters[filter], "YYYY-MM-DD").format(
+                "DD-MM-YYYY"
+              ),
               "DD-MM-YYYY"
             );
             let project_date = this.$moment(project[filter], "DD-MM-YYYY");
             return project_date >= filter_date;
           } else if (filter === "end_date" && this.filters[filter].length > 0) {
             let filter_date = this.$moment(
-              this.$moment(this.filters[filter], "YYYY-MM-DD").format("DD-MM-YYYY"),
+              this.$moment(this.filters[filter], "YYYY-MM-DD").format(
+                "DD-MM-YYYY"
+              ),
               "DD-MM-YYYY"
             );
             let project_date = this.$moment(project[filter], "DD-MM-YYYY");
             return project_date <= filter_date;
-          } else if (Array.isArray(project[filter]) && this.filters[filter].length > 0) {
+          } else if (
+            Array.isArray(project[filter]) &&
+            this.filters[filter].length > 0
+          ) {
             for (let value of project[filter]) {
               if (this.filters[filter].includes(value)) {
                 return this.filters[filter].includes(value);
               }
             }
           } else {
-            return this.filters[filter].length < 1 || this.filters[filter].includes(project[filter]);
+            return (
+              this.filters[filter].length < 1 ||
+              this.filters[filter].includes(project[filter])
+            );
           }
         });
       });
@@ -513,13 +600,13 @@ export default {
           .toLowerCase()
           .includes(this.searchfilters.toLowerCase());
       });
-    },
+    }
   },
 
   watch: {
     filterSelected: function(newVal, oldVal) {
       if (oldVal.length > newVal.length) {
-        var difference = oldVal.filter(value => !newVal.includes(value));
+        const difference = oldVal.filter(value => !newVal.includes(value));
         for (let index in difference)
           this.filters[difference[index].value] = "";
       }
@@ -533,7 +620,7 @@ export default {
   created() {
     this.loadProjects();
     this.headerValues = this.headers;
-    this.selectedHeaders = this.headers.filter(item=>item.selected);
+    this.selectedHeaders = this.headers.filter(item => item.selected);
     this.mainHeaders = this.headers;
   }
 };
@@ -622,4 +709,3 @@ export default {
   }
 }
 </style>
-
