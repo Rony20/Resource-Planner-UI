@@ -250,9 +250,8 @@
         :single-expand="single_expand"
         :loading="project_loader"
         loading-text="Loading Projects..."
-        
         class="elevation-1"
-      > 
+      >
         <template v-slot:item.lead="{ item }">{{
           item.lead | mapLeads(appLeads)
         }}</template>
@@ -268,15 +267,6 @@
             ></project-team-popup>
           </div>
         </template>
-       <!-- <template v-slot:expanded-item="{ headers, item }">
-          <td :colspan="headers.length">
-            <project-expand-detail
-              :projectKey="item.epic_id"
-              :selectedHeaders="selectedHeaders"
-              :mainHeaders="mainHeaders"
-            ></project-expand-detail>
-          </td>
-        </template> -->
       </v-data-table>
     </v-card>
   </v-app>
@@ -285,8 +275,6 @@
 <script>
 import ProjectEditPopup from "./popups/ProjectEditPopup";
 import ProjectTeamPopup from "./popups/ProjectTeamPopup";
-//import ProjectExpandDetail from "./ProjectExpandDetail";
-
 import { storeDataPropertiesMixin } from "../../Mixins/storeDataProperties.js";
 
 export default {
@@ -294,8 +282,7 @@ export default {
 
   components: {
     "project-edit-popup": ProjectEditPopup,
-    "project-team-popup": ProjectTeamPopup,
-   // "project-expand-detail": ProjectExpandDetail
+    "project-team-popup": ProjectTeamPopup
   },
 
   props: ["projectType"],
@@ -369,7 +356,7 @@ export default {
         },
         { text: "Epic Name", value: "epic_name", selected: 1},
         { text: "Project Name", value: "name", selected: 1},
-        {text: "Business Unit", value: "business_unit", selected: 1},
+        { text: "Business Unit", value: "business_unit", selected: 1},
         { text: "Project Lead", value: "lead", selected: 1},
         { text: "PMO Start Date", value: "start_date", selected: 1},
         { text: "PMO End Date", value: "end_date", selected: 1},
@@ -436,8 +423,7 @@ export default {
     },
     columnsFilters() {
       this.menu = false;
-      this.selectedHeaders = this.headerValues.filter(item=>item.selected==1);
-      
+      this.selectedHeaders = this.headerValues.filter(item => item.selected);
     }
   },
 
@@ -539,7 +525,7 @@ export default {
       }
     },
     menu(val) {
-      if (val == true) {
+      if (val === true) {
         this.headerValues = this.headers;
       }
     }
@@ -547,9 +533,8 @@ export default {
   created() {
     this.loadProjects();
     this.headerValues = this.headers;
-    this.selectedHeaders = this.headers.filter(item=>item.selected==1);
+    this.selectedHeaders = this.headers.filter(item=>item.selected);
     this.mainHeaders = this.headers;
-    console.log(this.headers)
   }
 };
 </script>
@@ -569,7 +554,6 @@ export default {
 >>> .v-list-item {
   overflow: auto;
   text-overflow: unset;
-  /* width: 250px; */
 }
 >>> .v-list-item--active {
   color: white;
@@ -578,7 +562,6 @@ export default {
 >>> .v-list-item:hover {
   list-style: none;
   text-align: left;
-  /* padding: 4px 2px; */
   border: 1px solid black;
   background-color: #e3f2fd;
 }
