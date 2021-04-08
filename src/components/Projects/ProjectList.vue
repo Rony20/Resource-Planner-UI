@@ -612,7 +612,7 @@ export default {
       }
     },
     menu(val) {
-      if (val === true) {
+      if (val) {
         this.headerValues = this.headers;
       }
     }
