@@ -103,7 +103,6 @@ export default {
     settingsAction(action) {
       switch (action) {
         case "syncWithJira":
-          console.log("Sync JIRA Running");
           this.settingsSyncList[0].loading = true;
           this.$syncJira()
             .then(response => {
@@ -129,7 +128,6 @@ export default {
           break;
 
         case "syncWithHRMS":
-          console.log("Sync HRMS Running");
           this.settingsSyncList[1].loading = true;
           this.$syncHRMS()
             .then(response => {
@@ -153,8 +151,6 @@ export default {
               this.settingsSyncList[1].loading = false;
             });
           break;
-        default:
-          console.log(action, " Not Available Yet...");
       }
     }
   }

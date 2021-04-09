@@ -96,7 +96,6 @@ const mutations = {
     let project_obj = state.projects.find(
       project => project.key === data["project_id"]
     );
-    console.log(data["project_id"]);
     project_obj["name"] = data["project_name"];
     project_obj["lead"] = data["assigned_pm"];
     project_obj["start_date"] = data["start_date"];
